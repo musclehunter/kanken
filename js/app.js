@@ -10,6 +10,9 @@ import { storage } from './storage.js';
 import { dataManager } from './data-manager.js';
 import { QuizSession } from './quiz.js';
 
+// Application version (bump on each release)
+export const APP_VERSION = '1.0.0';
+
 class VIEWS_ROUTER {
     constructor() {
         this.currentGrade = 10; // Default is 10級 (Grade 1)
@@ -25,6 +28,10 @@ class VIEWS_ROUTER {
     async init() {
         this.setupViewRouting();
         this.setupUIHandlers();
+
+        // Display app version
+        const versionEl = document.getElementById('app-version');
+        if (versionEl) versionEl.innerText = `v${APP_VERSION}`;
 
         // Check recognition engine availability
         const engineText = await graderEngineStatus();
