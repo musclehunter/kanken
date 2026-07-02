@@ -71,9 +71,12 @@ export const dataManager = {
             case 7: filename = 'grade-4.json'; break;
             case 6: filename = 'grade-5.json'; break;
             case 5: filename = 'grade-6.json'; break;
-            case 4: filename = 'grade-8.json'; break;
-            case 1.5: filename = 'jinmeiyo.json'; break;
-            case 1: filename = 'extra-jis.json'; break;
+            // 4級・3級・準2級 = 常用漢字全体 (小1〜6 + 中学)
+            case 4: case 3: case 2.5: filename = 'grade-joyo.json'; break;
+            // 2級 = 常用漢字 + 人名用漢字
+            case 2: filename = 'grade-2kyu.json'; break;
+            // 準1級・1級 = 常用 + 人名用 + JIS第1・第2水準
+            case 1.5: case 1: filename = 'grade-pre1.json'; break;
             default: throw new Error(`Invalid grade: ${gradeId}`);
         }
 

@@ -170,7 +170,7 @@ class VIEWS_ROUTER {
                     // Map kentei grade to API/data grade
                     const gradeToAPI = {
                         10: 1, 9: 2, 8: 3, 7: 4, 6: 5, 5: 6,
-                        4: 8, 3: 8, 2.5: 8, 2: 8,
+                        4: 4, 3: 3, 2.5: 2.5, 2: 2,
                         1.5: 1.5, 1: 1
                     };
                     const targetAPIGrade = gradeToAPI[gradeVal];
@@ -260,12 +260,12 @@ class VIEWS_ROUTER {
             7: '小学4年生レベル',
             6: '小学5年生レベル',
             5: '小学6年生レベル',
-            4: '中学校レベル',
-            3: '中学校レベル',
-            2.5: '中学校レベル',
-            2: '中学校レベル',
-            1.5: '人名用漢字レベル',
-            1: 'JIS第1・第2水準レベル'
+            4: '常用漢字レベル',
+            3: '常用漢字レベル',
+            2.5: '常用漢字レベル',
+            2: '常用漢字+人名用漢字レベル',
+            1.5: '常用+人名用+JIS水準レベル',
+            1: '常用+人名用+JIS水準レベル'
         };
         const gradeCounts = {
             10: '80',
@@ -274,12 +274,12 @@ class VIEWS_ROUTER {
             7: '642',
             6: '835',
             5: '1,026',
-            4: '1,134',
-            3: '1,134',
-            2.5: '1,134',
-            2: '1,134',
-            1.5: '863',
-            1: '3,000'
+            4: '2,060',
+            3: '2,060',
+            2.5: '2,060',
+            2: '2,923',
+            1.5: '5,923',
+            1: '5,923'
         };
         const gradeLabels = {
             2.5: '準2級',
@@ -310,7 +310,7 @@ class VIEWS_ROUTER {
                 // Dynamically compute progress for newly unlocked higher grades
                 const gradeToAPI2 = {
                     10: 1, 9: 2, 8: 3, 7: 4, 6: 5, 5: 6,
-                    4: 8, 3: 8, 2.5: 8, 2: 8,
+                    4: 4, 3: 3, 2.5: 2.5, 2: 2,
                     1.5: 1.5, 1: 1
                 };
                 const targetAPIGrade = gradeToAPI2[g];
@@ -327,7 +327,7 @@ class VIEWS_ROUTER {
                     this.studyIndex = 0;
                     const gradeToAPI3 = {
                         10: 1, 9: 2, 8: 3, 7: 4, 6: 5, 5: 6,
-                        4: 8, 3: 8, 2.5: 8, 2: 8,
+                        4: 4, 3: 3, 2.5: 2.5, 2: 2,
                         1.5: 1.5, 1: 1
                     };
                     const targetAPIGrade = gradeToAPI3[g];
