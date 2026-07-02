@@ -121,24 +121,40 @@ export const dataManager = {
             return cached;
         }
 
-        // 2. Fetch from GitHub KanjiVG repository
-        const codePoint = char.charCodeAt(0).toString(16).padStart(5, '0');
-        const svgUrl = `https://raw.githubusercontent.com/KanjiVG/kanjivg/master/kanji/${codePoint}.svg`;
+        // 2. Fetch KanjiVG SVG.
+        //    Prefer the bundled local copy (same-origin, offline), then remote CDN/raw.
+        const codePoint = char.codePointAt(0).toString(16).padStart(5, '0');
+        const sources = [
+            `./kanjivg/${codePoint}.svg`,
+            `https://cdn.jsdelivr.net/gh/KanjiVG/kanjivg@master/kanji/${codePoint}.svg`,
+            `https://raw.githubusercontent.com/KanjiVG/kanjivg/master/kanji/${codePoint}.svg`
+        ];
 
-        try {
-            const res = await fetch(svgUrl);
-            if (!res.ok) throw new Error(`KanjiVG SVG not found: HTTP ${res.status}`);
-            const svgText = await res.text();
+        for (const svgUrl of sources) {
+            try {
+                const controller = new AbortController();
+                const timer = setTimeout(() => controller.abort(), 6000);
+                let svgText;
+                try {
+                    const res = await fetch(svgUrl, { signal: controller.signal });
+                    if (!res.ok) throw new Error(`KanjiVG SVG not found: HTTP ${res.status}`);
+                    svgText = await res.text();
+                } finally {
+                    clearTimeout(timer);
+                }
 
-            // Save to IndexedDB
-            const tx = db.transaction('svg', 'readwrite');
-            tx.objectStore('svg').put({ kanji: char, svg: svgText });
+                // Save to IndexedDB
+                const tx = db.transaction('svg', 'readwrite');
+                tx.objectStore('svg').put({ kanji: char, svg: svgText });
 
-            return svgText;
-        } catch (e) {
-            console.warn(`Failed to retrieve KanjiVG SVG for '${char}':`, e);
-            return null;
+                return svgText;
+            } catch (e) {
+                console.warn(`Failed to retrieve KanjiVG SVG for '${char}' from ${svgUrl}:`, e);
+                // Try next source
+            }
         }
+
+        return null;
     },
 
     // Sync is simple local reload
