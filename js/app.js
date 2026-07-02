@@ -161,16 +161,19 @@ class VIEWS_ROUTER {
         document.querySelectorAll('.download-grade-btn').forEach(btn => {
             btn.onclick = async (e) => {
                 const card = e.target.closest('.grade-card');
-                const gradeVal = parseInt(card.dataset.grade);
+                const gradeVal = parseFloat(card.dataset.grade);
 
                 btn.textContent = '取得中...';
                 btn.disabled = true;
 
                 try {
-                    // Trigger dynamic download manager download
-                    // gradeVal (10 to 5) maps to API grade (1 to 6) which is 11 - gradeVal.
-                    // gradeVal === 4 maps to API grade-8.
-                    const targetAPIGrade = gradeVal === 4 ? 8 : (11 - gradeVal);
+                    // Map kentei grade to API/data grade
+                    const gradeToAPI = {
+                        10: 1, 9: 2, 8: 3, 7: 4, 6: 5, 5: 6,
+                        4: 8, 3: 8, 2.5: 8, 2: 8,
+                        1.5: 1.5, 1: 1
+                    };
+                    const targetAPIGrade = gradeToAPI[gradeVal];
                     await dataManager.downloadGrade(targetAPIGrade);
 
                     // Mark as unlocked
@@ -249,7 +252,7 @@ class VIEWS_ROUTER {
         gr10Card.querySelector('.progress-fill').style.width = `${progress.percentage}%`;
         gr10Card.querySelector('.progress-text').innerText = `学んだ漢字: ${progress.studied}/${progress.total} (${progress.percentage}%)`;
 
-        // Names & counts mapping for grades 10 to 4
+        // Names & counts mapping for all grades
         const gradeNames = {
             10: '小学1年生レベル',
             9: '小学2年生レベル',
@@ -257,7 +260,12 @@ class VIEWS_ROUTER {
             7: '小学4年生レベル',
             6: '小学5年生レベル',
             5: '小学6年生レベル',
-            4: '中学校・高校レベル'
+            4: '中学校レベル',
+            3: '中学校レベル',
+            2.5: '中学校レベル',
+            2: '中学校レベル',
+            1.5: '人名用漢字レベル',
+            1: 'JIS第1・第2水準レベル'
         };
         const gradeCounts = {
             10: '80',
@@ -266,7 +274,16 @@ class VIEWS_ROUTER {
             7: '642',
             6: '835',
             5: '1,026',
-            4: '1,110'
+            4: '1,134',
+            3: '1,134',
+            2.5: '1,134',
+            2: '1,134',
+            1.5: '863',
+            1: '3,000'
+        };
+        const gradeLabels = {
+            2.5: '準2級',
+            1.5: '準1級'
         };
 
         // Render unlocked card status modifications
@@ -276,7 +293,7 @@ class VIEWS_ROUTER {
             if (card && card.classList.contains('locked')) {
                 card.classList.remove('locked');
                 card.innerHTML = `
-          <div class="grade-badge">${g}級</div>
+          <div class="grade-badge">${gradeLabels[g] || g + '級'}</div>
           <div class="grade-info">
             <h3>${gradeNames[g] || '小学校レベル'}</h3>
             <p class="grade-char-count">配当漢字 ${gradeCounts[g] || '0'}字</p>
@@ -291,7 +308,12 @@ class VIEWS_ROUTER {
         `;
 
                 // Dynamically compute progress for newly unlocked higher grades
-                const targetAPIGrade = g === 4 ? 8 : (11 - g);
+                const gradeToAPI2 = {
+                    10: 1, 9: 2, 8: 3, 7: 4, 6: 5, 5: 6,
+                    4: 8, 3: 8, 2.5: 8, 2: 8,
+                    1.5: 1.5, 1: 1
+                };
+                const targetAPIGrade = gradeToAPI2[g];
                 dataManager.getKanjiList(targetAPIGrade).then(list => {
                     const prog = storage.getGradeProgress(list);
                     const block = document.getElementById(`progress-${g}`);
@@ -303,7 +325,12 @@ class VIEWS_ROUTER {
                 card.querySelector('.start-grade-btn').onclick = async () => {
                     this.currentGrade = g;
                     this.studyIndex = 0;
-                    const targetAPIGrade = g === 4 ? 8 : (11 - g);
+                    const gradeToAPI3 = {
+                        10: 1, 9: 2, 8: 3, 7: 4, 6: 5, 5: 6,
+                        4: 8, 3: 8, 2.5: 8, 2: 8,
+                        1.5: 1.5, 1: 1
+                    };
+                    const targetAPIGrade = gradeToAPI3[g];
                     this.kanjiData = await dataManager.getKanjiList(targetAPIGrade);
                     window.location.hash = 'study';
                 };
