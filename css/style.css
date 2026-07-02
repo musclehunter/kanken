@@ -79,10 +79,12 @@ html {
 .app-container {
   display: flex;
   flex-direction: column;
+  /* Follows the visible area so the bottom nav is never hidden behind the
+     mobile browser UI / system navigation bar. --app-height is set by JS
+     (window.innerHeight) as the most reliable value, with dvh/vh fallbacks. */
   height: 100vh;
-  /* Dynamic viewport height: follows the visible area so the bottom nav
-     is never hidden behind the mobile browser UI / system navigation bar */
   height: 100dvh;
+  height: var(--app-height, 100dvh);
   max-width: 500px; /* Mobile constraints */
   margin: 0 auto;
   background-color: var(--bg-primary);
@@ -123,16 +125,11 @@ html {
   overflow-y: auto;
   position: relative;
   padding: 16px;
-  /* Space for bottom nav + Android/iOS system navigation safe area */
-  padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
 }
 
 /* --- NAVIGATION --- */
 .app-nav {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
+  flex-shrink: 0;
   min-height: 64px;
   display: flex;
   background: var(--glass-bg);

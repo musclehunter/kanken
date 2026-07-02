@@ -410,8 +410,22 @@ async function graderEngineStatus() {
     return await grader.detectEngine();
 }
 
+// Keep the app height in sync with the actual visible viewport so the bottom
+// navigation is never hidden behind the mobile browser UI / system nav bar.
+function setAppHeight() {
+    document.documentElement.style.setProperty('--app-height', `${window.innerHeight}px`);
+}
+setAppHeight();
+window.addEventListener('resize', setAppHeight);
+window.addEventListener('orientationchange', setAppHeight);
+if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', setAppHeight);
+}
+
 // --- BOOT AND SERVICE WORKER REGISTRATION ---
 window.addEventListener('DOMContentLoaded', () => {
+    setAppHeight();
+
     // Start Routing
     window.appRouter = new VIEWS_ROUTER();
 
