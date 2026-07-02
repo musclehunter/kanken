@@ -992,6 +992,14 @@ html {
 .settings-item-desc {
   font-size: 11px;
   color: var(--text-secondary);
+  line-height: 1.5;
+}
+.settings-item-desc a {
+  color: var(--accent-primary);
+  text-decoration: none;
+}
+.settings-item-desc a:hover {
+  text-decoration: underline;
 }
 
 .select-input {
