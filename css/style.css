@@ -58,6 +58,7 @@ body {
   color: var(--text-primary);
   min-height: 100vh;
   min-height: -webkit-fill-available;
+  min-height: 100dvh;
   overflow: hidden;
   line-height: 1.5;
 }
@@ -79,6 +80,9 @@ html {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  /* Dynamic viewport height: follows the visible area so the bottom nav
+     is never hidden behind the mobile browser UI / system navigation bar */
+  height: 100dvh;
   max-width: 500px; /* Mobile constraints */
   margin: 0 auto;
   background-color: var(--bg-primary);
