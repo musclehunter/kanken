@@ -1,0 +1,3689 @@
+[
+  {
+    "kanji": "世",
+    "grade": 3,
+    "stroke_count": 5,
+    "meanings": [
+      "generation",
+      "public",
+      "society",
+      "world"
+    ],
+    "on_readings": [
+      "セ",
+      "セイ",
+      "ソウ"
+    ],
+    "kun_readings": [
+      "よ"
+    ]
+  },
+  {
+    "kanji": "丁",
+    "grade": 3,
+    "stroke_count": 2,
+    "meanings": [
+      "4th calendar sign",
+      "counter for guns, tools, leaves or cakes of something",
+      "even number",
+      "street",
+      "town",
+      "ward"
+    ],
+    "on_readings": [
+      "チ",
+      "チョウ",
+      "チン",
+      "テイ",
+      "トウ"
+    ],
+    "kun_readings": [
+      "ひのと"
+    ]
+  },
+  {
+    "kanji": "区",
+    "grade": 3,
+    "stroke_count": 4,
+    "meanings": [
+      "district",
+      "ward"
+    ],
+    "on_readings": [
+      "オウ",
+      "ク",
+      "コウ"
+    ],
+    "kun_readings": []
+  },
+  {
+    "kanji": "勝",
+    "grade": 3,
+    "stroke_count": 12,
+    "meanings": [
+      "excel",
+      "prevail",
+      "victory",
+      "win"
+    ],
+    "on_readings": [
+      "ショウ"
+    ],
+    "kun_readings": [
+      "-が.ち",
+      "か.つ",
+      "かつ",
+      "すぐ.れる",
+      "まさ.る"
+    ]
+  },
+  {
+    "kanji": "他",
+    "grade": 3,
+    "stroke_count": 5,
+    "meanings": [
+      "another",
+      "other",
+      "the others"
+    ],
+    "on_readings": [
+      "タ"
+    ],
+    "kun_readings": [
+      "ほか"
+    ]
+  },
+  {
+    "kanji": "両",
+    "grade": 3,
+    "stroke_count": 6,
+    "meanings": [
+      "both",
+      "counter for carriages (e.g., in a train)",
+      "old Japanese coin",
+      "two"
+    ],
+    "on_readings": [
+      "リョウ"
+    ],
+    "kun_readings": [
+      "てる",
+      "ふたつ"
+    ]
+  },
+  {
+    "kanji": "写",
+    "grade": 3,
+    "stroke_count": 5,
+    "meanings": [
+      "be photographed",
+      "copy",
+      "describe"
+    ],
+    "on_readings": [
+      "シャ",
+      "ジャ"
+    ],
+    "kun_readings": [
+      "うつ-",
+      "うつ.し",
+      "うつ.す",
+      "うつ.る"
+    ]
+  },
+  {
+    "kanji": "住",
+    "grade": 3,
+    "stroke_count": 7,
+    "meanings": [
+      "dwell",
+      "inhabit",
+      "live",
+      "reside"
+    ],
+    "on_readings": [
+      "ジュウ",
+      "チュウ",
+      "ヂュウ"
+    ],
+    "kun_readings": [
+      "-ず.まい",
+      "す.まう",
+      "す.む"
+    ]
+  },
+  {
+    "kanji": "取",
+    "grade": 3,
+    "stroke_count": 8,
+    "meanings": [
+      "fetch",
+      "take",
+      "take up"
+    ],
+    "on_readings": [
+      "シュ"
+    ],
+    "kun_readings": [
+      "-ど.り",
+      "と.り",
+      "と.り-",
+      "と.る",
+      "とり"
+    ]
+  },
+  {
+    "kanji": "主",
+    "grade": 3,
+    "stroke_count": 5,
+    "meanings": [
+      "chief",
+      "lord",
+      "main thing",
+      "master",
+      "principal"
+    ],
+    "on_readings": [
+      "シュ",
+      "シュウ",
+      "ス"
+    ],
+    "kun_readings": [
+      "あるじ",
+      "おも",
+      "ぬし"
+    ]
+  },
+  {
+    "kanji": "具",
+    "grade": 3,
+    "stroke_count": 8,
+    "meanings": [
+      "counter for armor, suits, sets of furniture",
+      "ingredients",
+      "means",
+      "possess",
+      "tool",
+      "utensil"
+    ],
+    "on_readings": [
+      "グ"
+    ],
+    "kun_readings": [
+      "そな.える",
+      "つぶさ.に"
+    ]
+  },
+  {
+    "kanji": "受",
+    "grade": 3,
+    "stroke_count": 8,
+    "meanings": [
+      "accept",
+      "answer (phone)",
+      "catch",
+      "get",
+      "receive",
+      "take",
+      "undergo"
+    ],
+    "on_readings": [
+      "ジュ"
+    ],
+    "kun_readings": [
+      "-う.け",
+      "う.かる",
+      "う.ける"
+    ]
+  },
+  {
+    "kanji": "化",
+    "grade": 3,
+    "stroke_count": 4,
+    "meanings": [
+      "-ization",
+      "change",
+      "delude",
+      "enchant",
+      "influence",
+      "take the form of"
+    ],
+    "on_readings": [
+      "カ",
+      "ケ"
+    ],
+    "kun_readings": [
+      "け.する",
+      "ば.かす",
+      "ば.ける",
+      "ふ.ける"
+    ]
+  },
+  {
+    "kanji": "列",
+    "grade": 3,
+    "stroke_count": 6,
+    "meanings": [
+      "column",
+      "file",
+      "rank",
+      "row",
+      "tier"
+    ],
+    "on_readings": [
+      "レ",
+      "レツ"
+    ],
+    "kun_readings": []
+  },
+  {
+    "kanji": "向",
+    "grade": 3,
+    "stroke_count": 6,
+    "meanings": [
+      "approach",
+      "beyond",
+      "confront",
+      "defy",
+      "facing",
+      "tend toward",
+      "yonder"
+    ],
+    "on_readings": [
+      "コウ"
+    ],
+    "kun_readings": [
+      "-む.き",
+      "-む.け",
+      "む.い",
+      "む.かい",
+      "む.かう",
+      "む.く",
+      "む.ける",
+      "む.こう",
+      "む.こう-",
+      "むか.い",
+      "むこ"
+    ]
+  },
+  {
+    "kanji": "勉",
+    "grade": 3,
+    "stroke_count": 10,
+    "meanings": [
+      "diligent",
+      "encourage",
+      "endeavour",
+      "exertion",
+      "make effort",
+      "strive"
+    ],
+    "on_readings": [
+      "ベン"
+    ],
+    "kun_readings": [
+      "つと.める"
+    ]
+  },
+  {
+    "kanji": "代",
+    "grade": 3,
+    "stroke_count": 5,
+    "meanings": [
+      "age",
+      "change",
+      "charge",
+      "convert",
+      "counter for decades of ages, eras, etc.",
+      "fee",
+      "generation",
+      "period",
+      "rate",
+      "replace",
+      "substitute"
+    ],
+    "on_readings": [
+      "タイ",
+      "ダイ"
+    ],
+    "kun_readings": [
+      "-が.わり",
+      "-がわ.り",
+      "か.える",
+      "か.わり",
+      "か.わる",
+      "かわ.り",
+      "かわ.る",
+      "しろ",
+      "よ"
+    ]
+  },
+  {
+    "kanji": "味",
+    "grade": 3,
+    "stroke_count": 8,
+    "meanings": [
+      "flavor",
+      "taste"
+    ],
+    "on_readings": [
+      "ミ"
+    ],
+    "kun_readings": [
+      "あじ",
+      "あじ.わう"
+    ]
+  },
+  {
+    "kanji": "品",
+    "grade": 3,
+    "stroke_count": 9,
+    "meanings": [
+      "article",
+      "counter for meal courses",
+      "dignity",
+      "goods",
+      "refinement"
+    ],
+    "on_readings": [
+      "ヒン",
+      "ホン"
+    ],
+    "kun_readings": [
+      "しな"
+    ]
+  },
+  {
+    "kanji": "員",
+    "grade": 3,
+    "stroke_count": 10,
+    "meanings": [
+      "employee",
+      "member",
+      "number",
+      "the one in charge"
+    ],
+    "on_readings": [
+      "イン"
+    ],
+    "kun_readings": []
+  },
+  {
+    "kanji": "命",
+    "grade": 3,
+    "stroke_count": 8,
+    "meanings": [
+      "appoint",
+      "command",
+      "decree",
+      "destiny",
+      "fate",
+      "life"
+    ],
+    "on_readings": [
+      "ミョウ",
+      "メイ"
+    ],
+    "kun_readings": [
+      "いのち"
+    ]
+  },
+  {
+    "kanji": "問",
+    "grade": 3,
+    "stroke_count": 11,
+    "meanings": [
+      "ask",
+      "problem",
+      "question"
+    ],
+    "on_readings": [
+      "モン"
+    ],
+    "kun_readings": [
+      "と.い",
+      "と.う",
+      "とん"
+    ]
+  },
+  {
+    "kanji": "安",
+    "grade": 3,
+    "stroke_count": 6,
+    "meanings": [
+      "cheap",
+      "contented",
+      "low",
+      "peaceful",
+      "quiet",
+      "relax",
+      "rested"
+    ],
+    "on_readings": [
+      "アン"
+    ],
+    "kun_readings": [
+      "やす",
+      "やす.い",
+      "やす.まる",
+      "やす.らか"
+    ]
+  },
+  {
+    "kanji": "坂",
+    "grade": 3,
+    "stroke_count": 7,
+    "meanings": [
+      "hill",
+      "incline",
+      "slope"
+    ],
+    "on_readings": [
+      "ハン"
+    ],
+    "kun_readings": [
+      "さか"
+    ]
+  },
+  {
+    "kanji": "係",
+    "grade": 3,
+    "stroke_count": 9,
+    "meanings": [
+      "concern oneself",
+      "connection",
+      "duty",
+      "person in charge"
+    ],
+    "on_readings": [
+      "ケイ"
+    ],
+    "kun_readings": [
+      "-がかり",
+      "かか.る",
+      "かか.わる",
+      "かかり"
+    ]
+  },
+  {
+    "kanji": "全",
+    "grade": 3,
+    "stroke_count": 6,
+    "meanings": [
+      "all",
+      "complete",
+      "entire",
+      "fulfill",
+      "whole"
+    ],
+    "on_readings": [
+      "ゼン"
+    ],
+    "kun_readings": [
+      "すべ.て",
+      "まった.く"
+    ]
+  },
+  {
+    "kanji": "事",
+    "grade": 3,
+    "stroke_count": 8,
+    "meanings": [
+      "business",
+      "fact",
+      "matter",
+      "possibly",
+      "reason",
+      "thing"
+    ],
+    "on_readings": [
+      "ジ",
+      "ズ"
+    ],
+    "kun_readings": [
+      "こと",
+      "つか.う",
+      "つか.える"
+    ]
+  },
+  {
+    "kanji": "反",
+    "grade": 3,
+    "stroke_count": 4,
+    "meanings": [
+      "anti-"
+    ],
+    "on_readings": [
+      "タン",
+      "ハン",
+      "ホ",
+      "ホン"
+    ],
+    "kun_readings": [
+      "-かえ.る",
+      "かえ.す",
+      "かえ.る",
+      "そ.らす",
+      "そ.る"
+    ]
+  },
+  {
+    "kanji": "乗",
+    "grade": 3,
+    "stroke_count": 9,
+    "meanings": [
+      "board",
+      "counter for vehicles",
+      "join",
+      "mount",
+      "multiplication",
+      "power",
+      "record",
+      "ride"
+    ],
+    "on_readings": [
+      "ショウ",
+      "ジョウ"
+    ],
+    "kun_readings": [
+      "-の.り",
+      "の.せる",
+      "の.る"
+    ]
+  },
+  {
+    "kanji": "去",
+    "grade": 3,
+    "stroke_count": 5,
+    "meanings": [
+      "divorce",
+      "elapse",
+      "eliminate",
+      "gone",
+      "leave",
+      "past",
+      "quit"
+    ],
+    "on_readings": [
+      "キョ",
+      "コ"
+    ],
+    "kun_readings": [
+      "-さ.る",
+      "さ.る"
+    ]
+  },
+  {
+    "kanji": "央",
+    "grade": 3,
+    "stroke_count": 5,
+    "meanings": [
+      "center",
+      "middle"
+    ],
+    "on_readings": [
+      "オウ"
+    ],
+    "kun_readings": []
+  },
+  {
+    "kanji": "予",
+    "grade": 3,
+    "stroke_count": 4,
+    "meanings": [
+      "I",
+      "beforehand",
+      "myself",
+      "previous"
+    ],
+    "on_readings": [
+      "シャ",
+      "ヨ"
+    ],
+    "kun_readings": [
+      "あらかじ.め"
+    ]
+  },
+  {
+    "kanji": "倍",
+    "grade": 3,
+    "stroke_count": 10,
+    "meanings": [
+      "double",
+      "fold",
+      "times",
+      "twice"
+    ],
+    "on_readings": [
+      "バイ"
+    ],
+    "kun_readings": []
+  },
+  {
+    "kanji": "君",
+    "grade": 3,
+    "stroke_count": 7,
+    "meanings": [
+      "male name suffix",
+      "mister",
+      "ruler",
+      "you"
+    ],
+    "on_readings": [
+      "クン"
+    ],
+    "kun_readings": [
+      "-ぎみ",
+      "きみ"
+    ]
+  },
+  {
+    "kanji": "宮",
+    "grade": 3,
+    "stroke_count": 10,
+    "meanings": [
+      "Shinto shrine",
+      "constellations",
+      "palace",
+      "princess"
+    ],
+    "on_readings": [
+      "キュウ",
+      "ク",
+      "クウ",
+      "グウ"
+    ],
+    "kun_readings": [
+      "みや"
+    ]
+  },
+  {
+    "kanji": "守",
+    "grade": 3,
+    "stroke_count": 6,
+    "meanings": [
+      "defend",
+      "guard",
+      "obey",
+      "protect"
+    ],
+    "on_readings": [
+      "シュ",
+      "ス"
+    ],
+    "kun_readings": [
+      "-もり",
+      "かみ",
+      "まも.り",
+      "まも.る",
+      "もり"
+    ]
+  },
+  {
+    "kanji": "宿",
+    "grade": 3,
+    "stroke_count": 11,
+    "meanings": [
+      "be pregnant",
+      "dwell",
+      "dwelling",
+      "home",
+      "inn",
+      "lodge",
+      "lodging",
+      "relay station"
+    ],
+    "on_readings": [
+      "シュク"
+    ],
+    "kun_readings": [
+      "やど",
+      "やど.す",
+      "やど.る"
+    ]
+  },
+  {
+    "kanji": "対",
+    "grade": 3,
+    "stroke_count": 7,
+    "meanings": [
+      "anti-",
+      "compare",
+      "equal",
+      "even",
+      "opposite",
+      "versus",
+      "vis-a-vis"
+    ],
+    "on_readings": [
+      "タイ",
+      "ツイ"
+    ],
+    "kun_readings": [
+      "あいて",
+      "こた.える",
+      "そろ.い",
+      "つれあ.い",
+      "なら.ぶ",
+      "むか.う"
+    ]
+  },
+  {
+    "kanji": "仕",
+    "grade": 3,
+    "stroke_count": 5,
+    "meanings": [
+      "attend",
+      "doing",
+      "official",
+      "serve"
+    ],
+    "on_readings": [
+      "シ",
+      "ジ"
+    ],
+    "kun_readings": [
+      "つか.える"
+    ]
+  },
+  {
+    "kanji": "悪",
+    "grade": 3,
+    "stroke_count": 11,
+    "meanings": [
+      "bad",
+      "evil",
+      "false",
+      "rascal",
+      "vice",
+      "wrong"
+    ],
+    "on_readings": [
+      "アク",
+      "オ"
+    ],
+    "kun_readings": [
+      "-にく.い",
+      "あ.し",
+      "ああ",
+      "いずくに",
+      "いずくんぞ",
+      "にく.い",
+      "にく.む",
+      "わる-",
+      "わる.い"
+    ]
+  },
+  {
+    "kanji": "幸",
+    "grade": 3,
+    "stroke_count": 8,
+    "meanings": [
+      "blessing",
+      "fortune",
+      "happiness"
+    ],
+    "on_readings": [
+      "コウ"
+    ],
+    "kun_readings": [
+      "さいわ.い",
+      "さち",
+      "しあわ.せ"
+    ]
+  },
+  {
+    "kanji": "島",
+    "grade": 3,
+    "stroke_count": 10,
+    "meanings": [
+      "island"
+    ],
+    "on_readings": [
+      "トウ"
+    ],
+    "kun_readings": [
+      "しま"
+    ]
+  },
+  {
+    "kanji": "式",
+    "grade": 3,
+    "stroke_count": 6,
+    "meanings": [
+      "ceremony",
+      "expression",
+      "form",
+      "function",
+      "method",
+      "rite",
+      "style",
+      "system"
+    ],
+    "on_readings": [
+      "シキ"
+    ],
+    "kun_readings": []
+  },
+  {
+    "kanji": "度",
+    "grade": 3,
+    "stroke_count": 9,
+    "meanings": [
+      "attitude",
+      "consider",
+      "counter for occurrences",
+      "degrees",
+      "occurrence",
+      "time"
+    ],
+    "on_readings": [
+      "タク",
+      "ト",
+      "ド"
+    ],
+    "kun_readings": [
+      "-た.い",
+      "たび"
+    ]
+  },
+  {
+    "kanji": "待",
+    "grade": 3,
+    "stroke_count": 9,
+    "meanings": [
+      "depend on",
+      "wait"
+    ],
+    "on_readings": [
+      "タイ"
+    ],
+    "kun_readings": [
+      "-ま.ち",
+      "ま.つ"
+    ]
+  },
+  {
+    "kanji": "急",
+    "grade": 3,
+    "stroke_count": 9,
+    "meanings": [
+      "emergency",
+      "hurry",
+      "steep",
+      "sudden"
+    ],
+    "on_readings": [
+      "キュウ"
+    ],
+    "kun_readings": [
+      "いそ.ぎ",
+      "いそ.ぐ",
+      "せ.く"
+    ]
+  },
+  {
+    "kanji": "役",
+    "grade": 3,
+    "stroke_count": 7,
+    "meanings": [
+      "campaign",
+      "drafted labor",
+      "duty",
+      "office",
+      "role",
+      "service",
+      "war"
+    ],
+    "on_readings": [
+      "エキ",
+      "ヤク"
+    ],
+    "kun_readings": []
+  },
+  {
+    "kanji": "息",
+    "grade": 3,
+    "stroke_count": 10,
+    "meanings": [
+      "breath",
+      "coming to an end",
+      "interest (on money)",
+      "nuture",
+      "respiration",
+      "rest",
+      "son"
+    ],
+    "on_readings": [
+      "ソク"
+    ],
+    "kun_readings": [
+      "いき"
+    ]
+  },
+  {
+    "kanji": "意",
+    "grade": 3,
+    "stroke_count": 13,
+    "meanings": [
+      "care",
+      "desire",
+      "heart",
+      "idea",
+      "liking",
+      "mind",
+      "taste",
+      "thought"
+    ],
+    "on_readings": [
+      "イ"
+    ],
+    "kun_readings": []
+  },
+  {
+    "kanji": "所",
+    "grade": 3,
+    "stroke_count": 8,
+    "meanings": [
+      "extent",
+      "place"
+    ],
+    "on_readings": [
+      "ショ"
+    ],
+    "kun_readings": [
+      "-ところ",
+      "とこ",
+      "ところ",
+      "どころ"
+    ]
+  },
+  {
+    "kanji": "想",
+    "grade": 3,
+    "stroke_count": 13,
+    "meanings": [
+      "concept",
+      "idea",
+      "think",
+      "thought"
+    ],
+    "on_readings": [
+      "ソ",
+      "ソウ"
+    ],
+    "kun_readings": [
+      "おも.う"
+    ]
+  },
+  {
+    "kanji": "悲",
+    "grade": 3,
+    "stroke_count": 12,
+    "meanings": [
+      "deplore",
+      "grieve",
+      "regret",
+      "sad"
+    ],
+    "on_readings": [
+      "ヒ"
+    ],
+    "kun_readings": [
+      "かな.しい",
+      "かな.しむ"
+    ]
+  },
+  {
+    "kanji": "感",
+    "grade": 3,
+    "stroke_count": 13,
+    "meanings": [
+      "emotion",
+      "feeling",
+      "sensation"
+    ],
+    "on_readings": [
+      "カン"
+    ],
+    "kun_readings": []
+  },
+  {
+    "kanji": "打",
+    "grade": 3,
+    "stroke_count": 5,
+    "meanings": [
+      "dozen",
+      "hit",
+      "knock",
+      "pound",
+      "strike"
+    ],
+    "on_readings": [
+      "ダ",
+      "ダース"
+    ],
+    "kun_readings": [
+      "う.ち-",
+      "う.つ",
+      "ぶ.つ"
+    ]
+  },
+  {
+    "kanji": "投",
+    "grade": 3,
+    "stroke_count": 7,
+    "meanings": [
+      "abandon",
+      "discard",
+      "give up",
+      "hurl",
+      "invest in",
+      "join",
+      "launch into",
+      "sell at a loss",
+      "throw"
+    ],
+    "on_readings": [
+      "トウ"
+    ],
+    "kun_readings": [
+      "-な.げ",
+      "な.げる"
+    ]
+  },
+  {
+    "kanji": "拾",
+    "grade": 3,
+    "stroke_count": 9,
+    "meanings": [
+      "find",
+      "gather",
+      "go on foot",
+      "pick up",
+      "ten"
+    ],
+    "on_readings": [
+      "シュウ",
+      "ジュウ"
+    ],
+    "kun_readings": [
+      "ひろ.う"
+    ]
+  },
+  {
+    "kanji": "持",
+    "grade": 3,
+    "stroke_count": 9,
+    "meanings": [
+      "have",
+      "hold"
+    ],
+    "on_readings": [
+      "ジ"
+    ],
+    "kun_readings": [
+      "-も.ち",
+      "も.つ",
+      "も.てる"
+    ]
+  },
+  {
+    "kanji": "整",
+    "grade": 3,
+    "stroke_count": 16,
+    "meanings": [
+      "arranging",
+      "key (music)",
+      "meter",
+      "organize",
+      "tone",
+      "tune"
+    ],
+    "on_readings": [
+      "セイ"
+    ],
+    "kun_readings": [
+      "ととの.う",
+      "ととの.える"
+    ]
+  },
+  {
+    "kanji": "指",
+    "grade": 3,
+    "stroke_count": 9,
+    "meanings": [
+      "finger",
+      "indicate",
+      "measure (ruler)",
+      "play (chess)",
+      "point to",
+      "put into"
+    ],
+    "on_readings": [
+      "シ"
+    ],
+    "kun_readings": [
+      "-さ.し",
+      "さ.す",
+      "ゆび"
+    ]
+  },
+  {
+    "kanji": "旅",
+    "grade": 3,
+    "stroke_count": 10,
+    "meanings": [
+      "travel",
+      "trip"
+    ],
+    "on_readings": [
+      "リョ"
+    ],
+    "kun_readings": [
+      "たび"
+    ]
+  },
+  {
+    "kanji": "族",
+    "grade": 3,
+    "stroke_count": 11,
+    "meanings": [
+      "family",
+      "tribe"
+    ],
+    "on_readings": [
+      "ゾク"
+    ],
+    "kun_readings": []
+  },
+  {
+    "kanji": "期",
+    "grade": 3,
+    "stroke_count": 12,
+    "meanings": [
+      "date",
+      "period",
+      "term",
+      "time"
+    ],
+    "on_readings": [
+      "キ",
+      "ゴ"
+    ],
+    "kun_readings": []
+  },
+  {
+    "kanji": "昔",
+    "grade": 3,
+    "stroke_count": 8,
+    "meanings": [
+      "antiquity",
+      "old times",
+      "once upon a time"
+    ],
+    "on_readings": [
+      "シャク",
+      "セキ"
+    ],
+    "kun_readings": [
+      "むかし"
+    ]
+  },
+  {
+    "kanji": "放",
+    "grade": 3,
+    "stroke_count": 8,
+    "meanings": [
+      "banish",
+      "emit",
+      "fire",
+      "liberate",
+      "release",
+      "set free",
+      "shoot"
+    ],
+    "on_readings": [
+      "ホウ"
+    ],
+    "kun_readings": [
+      "-っぱな.し",
+      "こ.く",
+      "はな.す",
+      "はな.つ",
+      "はな.れる",
+      "ほう.る"
+    ]
+  },
+  {
+    "kanji": "和",
+    "grade": 3,
+    "stroke_count": 8,
+    "meanings": [
+      "Japan",
+      "Japanese style",
+      "harmony",
+      "peace",
+      "soften"
+    ],
+    "on_readings": [
+      "オ",
+      "カ",
+      "ワ"
+    ],
+    "kun_readings": [
+      "あ.える",
+      "なご.む",
+      "なご.やか",
+      "やわ.らぐ",
+      "やわ.らげる"
+    ]
+  },
+  {
+    "kanji": "号",
+    "grade": 3,
+    "stroke_count": 5,
+    "meanings": [
+      "call",
+      "item",
+      "name",
+      "nickname",
+      "number",
+      "pseudonym",
+      "title"
+    ],
+    "on_readings": [
+      "ゴウ"
+    ],
+    "kun_readings": [
+      "さけ.ぶ",
+      "よびな"
+    ]
+  },
+  {
+    "kanji": "使",
+    "grade": 3,
+    "stroke_count": 8,
+    "meanings": [
+      "ambassador",
+      "cause",
+      "envoy",
+      "messenger",
+      "order",
+      "send on a mission",
+      "use"
+    ],
+    "on_readings": [
+      "シ"
+    ],
+    "kun_readings": [
+      "-つか.い",
+      "-づか.い",
+      "つか.い",
+      "つか.う"
+    ]
+  },
+  {
+    "kanji": "委",
+    "grade": 3,
+    "stroke_count": 8,
+    "meanings": [
+      "committee",
+      "devote",
+      "discard",
+      "entrust to",
+      "leave to"
+    ],
+    "on_readings": [
+      "イ"
+    ],
+    "kun_readings": [
+      "ゆだ.ねる"
+    ]
+  },
+  {
+    "kanji": "医",
+    "grade": 3,
+    "stroke_count": 7,
+    "meanings": [
+      "doctor",
+      "medicine"
+    ],
+    "on_readings": [
+      "イ"
+    ],
+    "kun_readings": [
+      "い.する",
+      "い.やす",
+      "くすし"
+    ]
+  },
+  {
+    "kanji": "助",
+    "grade": 3,
+    "stroke_count": 7,
+    "meanings": [
+      "assist",
+      "help",
+      "rescue"
+    ],
+    "on_readings": [
+      "ジョ"
+    ],
+    "kun_readings": [
+      "す.ける",
+      "すけ",
+      "たす.かる",
+      "たす.ける"
+    ]
+  },
+  {
+    "kanji": "実",
+    "grade": 3,
+    "stroke_count": 8,
+    "meanings": [
+      "fruit",
+      "nut",
+      "reality",
+      "seed",
+      "truth"
+    ],
+    "on_readings": [
+      "シツ",
+      "ジツ"
+    ],
+    "kun_readings": [
+      "まこと",
+      "み",
+      "みち.る",
+      "みの",
+      "みの.る"
+    ]
+  },
+  {
+    "kanji": "植",
+    "grade": 3,
+    "stroke_count": 12,
+    "meanings": [
+      "plant"
+    ],
+    "on_readings": [
+      "ショク"
+    ],
+    "kun_readings": [
+      "う.える",
+      "う.わる"
+    ]
+  },
+  {
+    "kanji": "始",
+    "grade": 3,
+    "stroke_count": 8,
+    "meanings": [
+      "begin",
+      "commence"
+    ],
+    "on_readings": [
+      "シ"
+    ],
+    "kun_readings": [
+      "-はじ.める",
+      "はじ.まる",
+      "はじ.める"
+    ]
+  },
+  {
+    "kanji": "庭",
+    "grade": 3,
+    "stroke_count": 10,
+    "meanings": [
+      "courtyard",
+      "garden",
+      "yard"
+    ],
+    "on_readings": [
+      "テイ"
+    ],
+    "kun_readings": [
+      "にわ"
+    ]
+  },
+  {
+    "kanji": "州",
+    "grade": 3,
+    "stroke_count": 6,
+    "meanings": [
+      "province",
+      "state"
+    ],
+    "on_readings": [
+      "シュウ",
+      "ス"
+    ],
+    "kun_readings": [
+      "す"
+    ]
+  },
+  {
+    "kanji": "商",
+    "grade": 3,
+    "stroke_count": 11,
+    "meanings": [
+      "dealing in",
+      "make a deal",
+      "merchant",
+      "selling"
+    ],
+    "on_readings": [
+      "ショウ"
+    ],
+    "kun_readings": [
+      "あきな.う"
+    ]
+  },
+  {
+    "kanji": "庫",
+    "grade": 3,
+    "stroke_count": 10,
+    "meanings": [
+      "storehouse",
+      "warehouse"
+    ],
+    "on_readings": [
+      "ク",
+      "コ"
+    ],
+    "kun_readings": [
+      "くら"
+    ]
+  },
+  {
+    "kanji": "客",
+    "grade": 3,
+    "stroke_count": 9,
+    "meanings": [
+      "client",
+      "customer",
+      "guest",
+      "visitor"
+    ],
+    "on_readings": [
+      "カク",
+      "キャク"
+    ],
+    "kun_readings": []
+  },
+  {
+    "kanji": "寒",
+    "grade": 3,
+    "stroke_count": 12,
+    "meanings": [
+      "cold"
+    ],
+    "on_readings": [
+      "カン"
+    ],
+    "kun_readings": [
+      "さむ.い"
+    ]
+  },
+  {
+    "kanji": "決",
+    "grade": 3,
+    "stroke_count": 7,
+    "meanings": [
+      "agree upon",
+      "appoint",
+      "decide",
+      "fix"
+    ],
+    "on_readings": [
+      "ケツ"
+    ],
+    "kun_readings": [
+      "-ぎ.め",
+      "き.まる",
+      "き.める",
+      "さ.く"
+    ]
+  },
+  {
+    "kanji": "屋",
+    "grade": 3,
+    "stroke_count": 9,
+    "meanings": [
+      "dealer",
+      "house",
+      "roof",
+      "seller",
+      "shop"
+    ],
+    "on_readings": [
+      "オク"
+    ],
+    "kun_readings": [
+      "や"
+    ]
+  },
+  {
+    "kanji": "局",
+    "grade": 3,
+    "stroke_count": 7,
+    "meanings": [
+      "affair",
+      "board",
+      "bureau",
+      "conclusion",
+      "court lady",
+      "her apartment",
+      "lady-in-waiting",
+      "office"
+    ],
+    "on_readings": [
+      "キョク"
+    ],
+    "kun_readings": [
+      "つぼね"
+    ]
+  },
+  {
+    "kanji": "定",
+    "grade": 3,
+    "stroke_count": 8,
+    "meanings": [
+      "decide",
+      "determine",
+      "establish",
+      "fix"
+    ],
+    "on_readings": [
+      "ジョウ",
+      "テイ"
+    ],
+    "kun_readings": [
+      "さだ.か",
+      "さだ.まる",
+      "さだ.める"
+    ]
+  },
+  {
+    "kanji": "動",
+    "grade": 3,
+    "stroke_count": 11,
+    "meanings": [
+      "change",
+      "confusion",
+      "motion",
+      "move",
+      "shake",
+      "shift"
+    ],
+    "on_readings": [
+      "ドウ"
+    ],
+    "kun_readings": [
+      "うご.かす",
+      "うご.く"
+    ]
+  },
+  {
+    "kanji": "平",
+    "grade": 3,
+    "stroke_count": 5,
+    "meanings": [
+      "even",
+      "flat",
+      "peace"
+    ],
+    "on_readings": [
+      "ヒョウ",
+      "ビョウ",
+      "ヘイ"
+    ],
+    "kun_readings": [
+      "たい.ら",
+      "たい.らげる",
+      "ひら"
+    ]
+  },
+  {
+    "kanji": "深",
+    "grade": 3,
+    "stroke_count": 11,
+    "meanings": [
+      "deep",
+      "heighten",
+      "intensify",
+      "strengthen"
+    ],
+    "on_readings": [
+      "シン"
+    ],
+    "kun_readings": [
+      "-ぶか.い",
+      "ふか.い",
+      "ふか.まる",
+      "ふか.める",
+      "み-"
+    ]
+  },
+  {
+    "kanji": "岸",
+    "grade": 3,
+    "stroke_count": 8,
+    "meanings": [
+      "beach"
+    ],
+    "on_readings": [
+      "ガン"
+    ],
+    "kun_readings": [
+      "きし"
+    ]
+  },
+  {
+    "kanji": "帳",
+    "grade": 3,
+    "stroke_count": 11,
+    "meanings": [
+      "account book",
+      "album",
+      "curtain",
+      "net",
+      "notebook",
+      "tent",
+      "veil"
+    ],
+    "on_readings": [
+      "チョウ"
+    ],
+    "kun_readings": [
+      "とばり"
+    ]
+  },
+  {
+    "kanji": "昭",
+    "grade": 3,
+    "stroke_count": 9,
+    "meanings": [
+      "bright",
+      "shining"
+    ],
+    "on_readings": [
+      "ショウ"
+    ],
+    "kun_readings": []
+  },
+  {
+    "kanji": "暑",
+    "grade": 3,
+    "stroke_count": 12,
+    "meanings": [
+      "hot",
+      "sultry",
+      "summer heat"
+    ],
+    "on_readings": [
+      "ショ"
+    ],
+    "kun_readings": [
+      "あつ.い"
+    ]
+  },
+  {
+    "kanji": "暗",
+    "grade": 3,
+    "stroke_count": 13,
+    "meanings": [
+      "be blinded",
+      "darkness",
+      "disappear",
+      "grow dark",
+      "informal",
+      "shade"
+    ],
+    "on_readings": [
+      "アン"
+    ],
+    "kun_readings": [
+      "くら.い",
+      "くら.む",
+      "くれ.る"
+    ]
+  },
+  {
+    "kanji": "曲",
+    "grade": 3,
+    "stroke_count": 6,
+    "meanings": [
+      "bend",
+      "composition",
+      "crooked",
+      "curve",
+      "fault",
+      "injustice",
+      "lean",
+      "melody",
+      "music",
+      "perverse",
+      "pleasure"
+    ],
+    "on_readings": [
+      "キョク"
+    ],
+    "kun_readings": [
+      "くま",
+      "ま.がる",
+      "ま.げる"
+    ]
+  },
+  {
+    "kanji": "服",
+    "grade": 3,
+    "stroke_count": 8,
+    "meanings": [
+      "admit",
+      "clothing",
+      "discharge",
+      "obey"
+    ],
+    "on_readings": [
+      "フク"
+    ],
+    "kun_readings": []
+  },
+  {
+    "kanji": "有",
+    "grade": 3,
+    "stroke_count": 6,
+    "meanings": [
+      "approx",
+      "exist",
+      "happen",
+      "have",
+      "occur",
+      "possess"
+    ],
+    "on_readings": [
+      "ウ",
+      "ユウ"
+    ],
+    "kun_readings": [
+      "あ.る"
+    ]
+  },
+  {
+    "kanji": "板",
+    "grade": 3,
+    "stroke_count": 8,
+    "meanings": [
+      "board",
+      "plank",
+      "plate",
+      "stage"
+    ],
+    "on_readings": [
+      "ハン",
+      "バン"
+    ],
+    "kun_readings": [
+      "いた"
+    ]
+  },
+  {
+    "kanji": "次",
+    "grade": 3,
+    "stroke_count": 6,
+    "meanings": [
+      "next",
+      "order",
+      "sequence"
+    ],
+    "on_readings": [
+      "シ",
+      "ジ"
+    ],
+    "kun_readings": [
+      "つ.ぐ",
+      "つぎ"
+    ]
+  },
+  {
+    "kanji": "柱",
+    "grade": 3,
+    "stroke_count": 9,
+    "meanings": [
+      "cylinder",
+      "pillar",
+      "post",
+      "support"
+    ],
+    "on_readings": [
+      "チュウ"
+    ],
+    "kun_readings": [
+      "はしら"
+    ]
+  },
+  {
+    "kanji": "登",
+    "grade": 3,
+    "stroke_count": 12,
+    "meanings": [
+      "ascend",
+      "climb up"
+    ],
+    "on_readings": [
+      "ショウ",
+      "チョウ",
+      "ト",
+      "トウ",
+      "ドウ"
+    ],
+    "kun_readings": [
+      "あ.がる",
+      "のぼ.る"
+    ]
+  },
+  {
+    "kanji": "油",
+    "grade": 3,
+    "stroke_count": 8,
+    "meanings": [
+      "fat",
+      "oil"
+    ],
+    "on_readings": [
+      "ユ",
+      "ユウ"
+    ],
+    "kun_readings": [
+      "あぶら"
+    ]
+  },
+  {
+    "kanji": "歯",
+    "grade": 3,
+    "stroke_count": 12,
+    "meanings": [
+      "cog",
+      "tooth"
+    ],
+    "on_readings": [
+      "シ"
+    ],
+    "kun_readings": [
+      "は",
+      "よわ.い",
+      "よわい",
+      "よわい.する"
+    ]
+  },
+  {
+    "kanji": "業",
+    "grade": 3,
+    "stroke_count": 13,
+    "meanings": [
+      "arts",
+      "business",
+      "performance",
+      "vocation"
+    ],
+    "on_readings": [
+      "ギョウ",
+      "ゴウ"
+    ],
+    "kun_readings": [
+      "わざ"
+    ]
+  },
+  {
+    "kanji": "根",
+    "grade": 3,
+    "stroke_count": 10,
+    "meanings": [
+      "head (pimple)",
+      "radical",
+      "root"
+    ],
+    "on_readings": [
+      "コン"
+    ],
+    "kun_readings": [
+      "-ね",
+      "ね"
+    ]
+  },
+  {
+    "kanji": "物",
+    "grade": 3,
+    "stroke_count": 8,
+    "meanings": [
+      "matter",
+      "object",
+      "thing"
+    ],
+    "on_readings": [
+      "ブツ",
+      "モツ"
+    ],
+    "kun_readings": [
+      "もの",
+      "もの-"
+    ]
+  },
+  {
+    "kanji": "泳",
+    "grade": 3,
+    "stroke_count": 8,
+    "meanings": [
+      "swim"
+    ],
+    "on_readings": [
+      "エイ"
+    ],
+    "kun_readings": [
+      "およ.ぐ"
+    ]
+  },
+  {
+    "kanji": "橋",
+    "grade": 3,
+    "stroke_count": 16,
+    "meanings": [
+      "bridge"
+    ],
+    "on_readings": [
+      "キョウ"
+    ],
+    "kun_readings": [
+      "はし"
+    ]
+  },
+  {
+    "kanji": "由",
+    "grade": 3,
+    "stroke_count": 5,
+    "meanings": [
+      "a reason",
+      "wherefore"
+    ],
+    "on_readings": [
+      "ユ",
+      "ユイ",
+      "ユウ"
+    ],
+    "kun_readings": [
+      "よ.る",
+      "よし"
+    ]
+  },
+  {
+    "kanji": "炭",
+    "grade": 3,
+    "stroke_count": 9,
+    "meanings": [
+      "charcoal",
+      "coal"
+    ],
+    "on_readings": [
+      "タン"
+    ],
+    "kun_readings": [
+      "すみ"
+    ]
+  },
+  {
+    "kanji": "球",
+    "grade": 3,
+    "stroke_count": 11,
+    "meanings": [
+      "ball",
+      "sphere"
+    ],
+    "on_readings": [
+      "キュウ"
+    ],
+    "kun_readings": [
+      "たま"
+    ]
+  },
+  {
+    "kanji": "界",
+    "grade": 3,
+    "stroke_count": 9,
+    "meanings": [
+      "boundary",
+      "world"
+    ],
+    "on_readings": [
+      "カイ"
+    ],
+    "kun_readings": []
+  },
+  {
+    "kanji": "申",
+    "grade": 3,
+    "stroke_count": 5,
+    "meanings": [
+      "3-5PM",
+      "have the honor to",
+      "ninth sign of Chinese zodiac",
+      "sign of the monkey"
+    ],
+    "on_readings": [
+      "シン"
+    ],
+    "kun_readings": [
+      "さる",
+      "もう.し-",
+      "もう.す"
+    ]
+  },
+  {
+    "kanji": "病",
+    "grade": 3,
+    "stroke_count": 10,
+    "meanings": [
+      "ill",
+      "sick"
+    ],
+    "on_readings": [
+      "ビョウ",
+      "ヘイ"
+    ],
+    "kun_readings": [
+      "-や.み",
+      "や.む",
+      "やまい"
+    ]
+  },
+  {
+    "kanji": "畑",
+    "grade": 3,
+    "stroke_count": 9,
+    "meanings": [
+      "(kokuji)",
+      "farm",
+      "field",
+      "garden",
+      "one's specialty"
+    ],
+    "on_readings": [],
+    "kun_readings": [
+      "-ばたけ",
+      "はた",
+      "はたけ"
+    ]
+  },
+  {
+    "kanji": "波",
+    "grade": 3,
+    "stroke_count": 8,
+    "meanings": [
+      "Poland",
+      "billows",
+      "waves"
+    ],
+    "on_readings": [
+      "ハ"
+    ],
+    "kun_readings": [
+      "なみ"
+    ]
+  },
+  {
+    "kanji": "皮",
+    "grade": 3,
+    "stroke_count": 5,
+    "meanings": [
+      "hide",
+      "leather",
+      "pelt",
+      "skin",
+      "skin radical (no. 107)"
+    ],
+    "on_readings": [
+      "ヒ"
+    ],
+    "kun_readings": [
+      "かわ"
+    ]
+  },
+  {
+    "kanji": "氷",
+    "grade": 3,
+    "stroke_count": 5,
+    "meanings": [
+      "congeal",
+      "freeze",
+      "hail",
+      "ice",
+      "icicle"
+    ],
+    "on_readings": [
+      "ヒョウ"
+    ],
+    "kun_readings": [
+      "こお.る",
+      "こおり",
+      "ひ"
+    ]
+  },
+  {
+    "kanji": "真",
+    "grade": 3,
+    "stroke_count": 10,
+    "meanings": [
+      "Buddhist sect",
+      "reality",
+      "true"
+    ],
+    "on_readings": [
+      "シン"
+    ],
+    "kun_readings": [
+      "ま",
+      "ま-",
+      "まこと"
+    ]
+  },
+  {
+    "kanji": "筆",
+    "grade": 3,
+    "stroke_count": 12,
+    "meanings": [
+      "handwriting",
+      "painting brush",
+      "writing",
+      "writing brush"
+    ],
+    "on_readings": [
+      "ヒツ"
+    ],
+    "kun_readings": [
+      "ふで"
+    ]
+  },
+  {
+    "kanji": "祭",
+    "grade": 3,
+    "stroke_count": 11,
+    "meanings": [
+      "celebrate",
+      "deify",
+      "enshrine",
+      "offer prayers",
+      "ritual",
+      "worship"
+    ],
+    "on_readings": [
+      "サイ"
+    ],
+    "kun_readings": [
+      "まつ.り",
+      "まつ.る",
+      "まつり"
+    ]
+  },
+  {
+    "kanji": "着",
+    "grade": 3,
+    "stroke_count": 12,
+    "meanings": [
+      "arrive",
+      "counter for suits of clothing",
+      "don",
+      "wear"
+    ],
+    "on_readings": [
+      "ジャク",
+      "チャク"
+    ],
+    "kun_readings": [
+      "き.せる",
+      "き.る",
+      "つ.く",
+      "つ.ける"
+    ]
+  },
+  {
+    "kanji": "礼",
+    "grade": 3,
+    "stroke_count": 5,
+    "meanings": [
+      "bow",
+      "ceremony",
+      "remuneration",
+      "salute",
+      "thanks"
+    ],
+    "on_readings": [
+      "ライ",
+      "レイ"
+    ],
+    "kun_readings": []
+  },
+  {
+    "kanji": "章",
+    "grade": 3,
+    "stroke_count": 11,
+    "meanings": [
+      "badge",
+      "chapter",
+      "composition",
+      "design",
+      "poem"
+    ],
+    "on_readings": [
+      "ショウ"
+    ],
+    "kun_readings": []
+  },
+  {
+    "kanji": "福",
+    "grade": 3,
+    "stroke_count": 13,
+    "meanings": [
+      "blessing",
+      "fortune",
+      "luck",
+      "wealth"
+    ],
+    "on_readings": [
+      "フク"
+    ],
+    "kun_readings": []
+  },
+  {
+    "kanji": "緑",
+    "grade": 3,
+    "stroke_count": 14,
+    "meanings": [
+      "green"
+    ],
+    "on_readings": [
+      "リョク",
+      "ロク"
+    ],
+    "kun_readings": [
+      "みどり"
+    ]
+  },
+  {
+    "kanji": "等",
+    "grade": 3,
+    "stroke_count": 12,
+    "meanings": [
+      "and so forth",
+      "class (first)",
+      "equal",
+      "etc.",
+      "quality",
+      "similar"
+    ],
+    "on_readings": [
+      "トウ"
+    ],
+    "kun_readings": [
+      "-ら",
+      "など",
+      "ひと.しい"
+    ]
+  },
+  {
+    "kanji": "箱",
+    "grade": 3,
+    "stroke_count": 15,
+    "meanings": [
+      "bin",
+      "box",
+      "case",
+      "chest",
+      "railway car"
+    ],
+    "on_readings": [
+      "ソウ"
+    ],
+    "kun_readings": [
+      "はこ"
+    ]
+  },
+  {
+    "kanji": "漢",
+    "grade": 3,
+    "stroke_count": 13,
+    "meanings": [
+      "China",
+      "Sino-"
+    ],
+    "on_readings": [
+      "カン"
+    ],
+    "kun_readings": []
+  },
+  {
+    "kanji": "美",
+    "grade": 3,
+    "stroke_count": 9,
+    "meanings": [
+      "beautiful",
+      "beauty"
+    ],
+    "on_readings": [
+      "ビ",
+      "ミ"
+    ],
+    "kun_readings": [
+      "うつく.しい"
+    ]
+  },
+  {
+    "kanji": "羊",
+    "grade": 3,
+    "stroke_count": 6,
+    "meanings": [
+      "sheep"
+    ],
+    "on_readings": [
+      "ヨウ"
+    ],
+    "kun_readings": [
+      "ひつじ"
+    ]
+  },
+  {
+    "kanji": "習",
+    "grade": 3,
+    "stroke_count": 11,
+    "meanings": [
+      "learn"
+    ],
+    "on_readings": [
+      "シュウ",
+      "ジュ"
+    ],
+    "kun_readings": [
+      "なら.い",
+      "なら.う"
+    ]
+  },
+  {
+    "kanji": "横",
+    "grade": 3,
+    "stroke_count": 15,
+    "meanings": [
+      "horizontal",
+      "perverse",
+      "side",
+      "sideways",
+      "unreasonable",
+      "width",
+      "woof"
+    ],
+    "on_readings": [
+      "オウ"
+    ],
+    "kun_readings": [
+      "よこ"
+    ]
+  },
+  {
+    "kanji": "湯",
+    "grade": 3,
+    "stroke_count": 12,
+    "meanings": [
+      "bath",
+      "hot spring",
+      "hot water"
+    ],
+    "on_readings": [
+      "トウ"
+    ],
+    "kun_readings": [
+      "ゆ"
+    ]
+  },
+  {
+    "kanji": "様",
+    "grade": 3,
+    "stroke_count": 14,
+    "meanings": [
+      "Esq.",
+      "manner",
+      "polite suffix",
+      "situation",
+      "way"
+    ],
+    "on_readings": [
+      "ショウ",
+      "ヨウ"
+    ],
+    "kun_readings": [
+      "さま",
+      "さん"
+    ]
+  },
+  {
+    "kanji": "究",
+    "grade": 3,
+    "stroke_count": 7,
+    "meanings": [
+      "research",
+      "study"
+    ],
+    "on_readings": [
+      "キュウ",
+      "ク"
+    ],
+    "kun_readings": [
+      "きわ.める"
+    ]
+  },
+  {
+    "kanji": "注",
+    "grade": 3,
+    "stroke_count": 8,
+    "meanings": [
+      "annotate",
+      "comment",
+      "concentrate on",
+      "flow into",
+      "irrigate",
+      "notes",
+      "pour",
+      "shed (tears)"
+    ],
+    "on_readings": [
+      "チュウ"
+    ],
+    "kun_readings": [
+      "さ.す",
+      "そそ.ぐ",
+      "つ.ぐ"
+    ]
+  },
+  {
+    "kanji": "死",
+    "grade": 3,
+    "stroke_count": 6,
+    "meanings": [
+      "death",
+      "die"
+    ],
+    "on_readings": [
+      "シ"
+    ],
+    "kun_readings": [
+      "し.に-",
+      "し.ぬ"
+    ]
+  },
+  {
+    "kanji": "発",
+    "grade": 3,
+    "stroke_count": 9,
+    "meanings": [
+      "counter for gunshots",
+      "departure",
+      "discharge",
+      "disclose",
+      "emit",
+      "publish",
+      "start from"
+    ],
+    "on_readings": [
+      "ハツ",
+      "ホツ"
+    ],
+    "kun_readings": [
+      "あば.く",
+      "おこ.る",
+      "た.つ",
+      "つか.わす",
+      "はな.つ"
+    ]
+  },
+  {
+    "kanji": "港",
+    "grade": 3,
+    "stroke_count": 12,
+    "meanings": [
+      "harbor"
+    ],
+    "on_readings": [
+      "コウ"
+    ],
+    "kun_readings": [
+      "みなと"
+    ]
+  },
+  {
+    "kanji": "温",
+    "grade": 3,
+    "stroke_count": 12,
+    "meanings": [
+      "warm"
+    ],
+    "on_readings": [
+      "オン"
+    ],
+    "kun_readings": [
+      "あたた.か",
+      "あたた.かい",
+      "あたた.まる",
+      "あたた.める",
+      "ぬく"
+    ]
+  },
+  {
+    "kanji": "県",
+    "grade": 3,
+    "stroke_count": 9,
+    "meanings": [
+      "prefecture"
+    ],
+    "on_readings": [
+      "ケン"
+    ],
+    "kun_readings": [
+      "か.ける"
+    ]
+  },
+  {
+    "kanji": "流",
+    "grade": 3,
+    "stroke_count": 10,
+    "meanings": [
+      "a sink",
+      "current",
+      "flow",
+      "forfeit"
+    ],
+    "on_readings": [
+      "リュウ",
+      "ル"
+    ],
+    "kun_readings": [
+      "-なが.す",
+      "なが.す",
+      "なが.れ",
+      "なが.れる"
+    ]
+  },
+  {
+    "kanji": "消",
+    "grade": 3,
+    "stroke_count": 10,
+    "meanings": [
+      "blow out",
+      "cancel",
+      "extinguish",
+      "neutralize",
+      "turn off"
+    ],
+    "on_readings": [
+      "ショウ"
+    ],
+    "kun_readings": [
+      "き.える",
+      "け.す"
+    ]
+  },
+  {
+    "kanji": "詩",
+    "grade": 3,
+    "stroke_count": 13,
+    "meanings": [
+      "poem",
+      "poetry"
+    ],
+    "on_readings": [
+      "シ"
+    ],
+    "kun_readings": [
+      "うた"
+    ]
+  },
+  {
+    "kanji": "短",
+    "grade": 3,
+    "stroke_count": 12,
+    "meanings": [
+      "brevity",
+      "defect",
+      "fault",
+      "short",
+      "weak point"
+    ],
+    "on_readings": [
+      "タン"
+    ],
+    "kun_readings": [
+      "みじか.い"
+    ]
+  },
+  {
+    "kanji": "調",
+    "grade": 3,
+    "stroke_count": 15,
+    "meanings": [
+      "exorcise",
+      "harmonize",
+      "investigate",
+      "key (music)",
+      "mediate",
+      "meter",
+      "prepare",
+      "tone",
+      "tune",
+      "writing style"
+    ],
+    "on_readings": [
+      "チョウ"
+    ],
+    "kun_readings": [
+      "しら.べ",
+      "しら.べる",
+      "ととの.う",
+      "ととの.える"
+    ]
+  },
+  {
+    "kanji": "者",
+    "grade": 3,
+    "stroke_count": 8,
+    "meanings": [
+      "person",
+      "someone"
+    ],
+    "on_readings": [
+      "シャ"
+    ],
+    "kun_readings": [
+      "もの"
+    ]
+  },
+  {
+    "kanji": "洋",
+    "grade": 3,
+    "stroke_count": 9,
+    "meanings": [
+      "Western style",
+      "foreign",
+      "ocean",
+      "sea"
+    ],
+    "on_readings": [
+      "ヨウ"
+    ],
+    "kun_readings": []
+  },
+  {
+    "kanji": "皿",
+    "grade": 3,
+    "stroke_count": 5,
+    "meanings": [
+      "a helping",
+      "dish",
+      "plate"
+    ],
+    "on_readings": [
+      "ベイ"
+    ],
+    "kun_readings": [
+      "さら"
+    ]
+  },
+  {
+    "kanji": "相",
+    "grade": 3,
+    "stroke_count": 9,
+    "meanings": [
+      "aspect",
+      "councillor",
+      "each other",
+      "inter-",
+      "minister of state",
+      "mutual",
+      "phase",
+      "physiognomy",
+      "together"
+    ],
+    "on_readings": [
+      "ショウ",
+      "ソウ"
+    ],
+    "kun_readings": [
+      "あい-"
+    ]
+  },
+  {
+    "kanji": "湖",
+    "grade": 3,
+    "stroke_count": 12,
+    "meanings": [
+      "lake"
+    ],
+    "on_readings": [
+      "コ"
+    ],
+    "kun_readings": [
+      "みずうみ"
+    ]
+  },
+  {
+    "kanji": "童",
+    "grade": 3,
+    "stroke_count": 12,
+    "meanings": [
+      "child",
+      "juvenile"
+    ],
+    "on_readings": [
+      "ドウ"
+    ],
+    "kun_readings": [
+      "わらべ"
+    ]
+  },
+  {
+    "kanji": "神",
+    "grade": 3,
+    "stroke_count": 9,
+    "meanings": [
+      "gods",
+      "mind",
+      "soul"
+    ],
+    "on_readings": [
+      "シン",
+      "ジン"
+    ],
+    "kun_readings": [
+      "かみ",
+      "かん-",
+      "こう-"
+    ]
+  },
+  {
+    "kanji": "研",
+    "grade": 3,
+    "stroke_count": 9,
+    "meanings": [
+      "polish",
+      "sharpen",
+      "study of"
+    ],
+    "on_readings": [
+      "ケン"
+    ],
+    "kun_readings": [
+      "と.ぐ"
+    ]
+  },
+  {
+    "kanji": "育",
+    "grade": 3,
+    "stroke_count": 8,
+    "meanings": [
+      "bring up",
+      "grow up",
+      "raise",
+      "rear"
+    ],
+    "on_readings": [
+      "イク"
+    ],
+    "kun_readings": [
+      "そだ.ち",
+      "そだ.つ",
+      "そだ.てる",
+      "はぐく.む"
+    ]
+  },
+  {
+    "kanji": "苦",
+    "grade": 3,
+    "stroke_count": 8,
+    "meanings": [
+      "feel bitter",
+      "hardship",
+      "scowl",
+      "suffering",
+      "trial",
+      "worry"
+    ],
+    "on_readings": [
+      "ク"
+    ],
+    "kun_readings": [
+      "-ぐる.しい",
+      "くる.しい",
+      "くる.しむ",
+      "くる.しめる",
+      "にが.い",
+      "にが.る"
+    ]
+  },
+  {
+    "kanji": "都",
+    "grade": 3,
+    "stroke_count": 11,
+    "meanings": [
+      "all",
+      "capital",
+      "everything",
+      "metropolis"
+    ],
+    "on_readings": [
+      "ツ",
+      "ト"
+    ],
+    "kun_readings": [
+      "みやこ"
+    ]
+  },
+  {
+    "kanji": "荷",
+    "grade": 3,
+    "stroke_count": 10,
+    "meanings": [
+      "baggage",
+      "bear (a burden)",
+      "cargo",
+      "freight",
+      "load",
+      "shoulder (a gun)",
+      "shoulder-pole load"
+    ],
+    "on_readings": [
+      "カ"
+    ],
+    "kun_readings": [
+      "に"
+    ]
+  },
+  {
+    "kanji": "葉",
+    "grade": 3,
+    "stroke_count": 12,
+    "meanings": [
+      "blade",
+      "counter for flat things",
+      "fragment",
+      "leaf",
+      "lobe",
+      "needle",
+      "piece",
+      "plane",
+      "spear"
+    ],
+    "on_readings": [
+      "ヨウ"
+    ],
+    "kun_readings": [
+      "は"
+    ]
+  },
+  {
+    "kanji": "談",
+    "grade": 3,
+    "stroke_count": 15,
+    "meanings": [
+      "discuss",
+      "talk"
+    ],
+    "on_readings": [
+      "ダン"
+    ],
+    "kun_readings": []
+  },
+  {
+    "kanji": "落",
+    "grade": 3,
+    "stroke_count": 12,
+    "meanings": [
+      "come down",
+      "drop",
+      "fall",
+      "hamlet",
+      "village"
+    ],
+    "on_readings": [
+      "ラク"
+    ],
+    "kun_readings": [
+      "お.ち",
+      "お.ちる",
+      "お.とす"
+    ]
+  },
+  {
+    "kanji": "豆",
+    "grade": 3,
+    "stroke_count": 7,
+    "meanings": [
+      "beans",
+      "midget",
+      "pea"
+    ],
+    "on_readings": [
+      "ズ",
+      "トウ"
+    ],
+    "kun_readings": [
+      "まめ",
+      "まめ-"
+    ]
+  },
+  {
+    "kanji": "第",
+    "grade": 3,
+    "stroke_count": 11,
+    "meanings": [
+      "No.",
+      "residence"
+    ],
+    "on_readings": [
+      "ダイ",
+      "テイ"
+    ],
+    "kun_readings": []
+  },
+  {
+    "kanji": "薬",
+    "grade": 3,
+    "stroke_count": 16,
+    "meanings": [
+      "benefit",
+      "chemical",
+      "enamel",
+      "gunpowder",
+      "medicine"
+    ],
+    "on_readings": [
+      "ヤク"
+    ],
+    "kun_readings": [
+      "くすり"
+    ]
+  },
+  {
+    "kanji": "転",
+    "grade": 3,
+    "stroke_count": 11,
+    "meanings": [
+      "change",
+      "revolve",
+      "turn around"
+    ],
+    "on_readings": [
+      "テン"
+    ],
+    "kun_readings": [
+      "うたた",
+      "うつ.る",
+      "くる.めく",
+      "ころ.がす",
+      "ころ.がる",
+      "ころ.げる",
+      "ころ.ぶ",
+      "まろ.ぶ"
+    ]
+  },
+  {
+    "kanji": "笛",
+    "grade": 3,
+    "stroke_count": 11,
+    "meanings": [
+      "bagpipe",
+      "clarinet",
+      "flute",
+      "piccolo",
+      "pipe",
+      "whistle"
+    ],
+    "on_readings": [
+      "テキ"
+    ],
+    "kun_readings": [
+      "ふえ"
+    ]
+  },
+  {
+    "kanji": "部",
+    "grade": 3,
+    "stroke_count": 11,
+    "meanings": [
+      "bureau",
+      "class",
+      "copy",
+      "counter for copies of a newspaper or magazine",
+      "dept",
+      "part",
+      "portion",
+      "section"
+    ],
+    "on_readings": [
+      "ブ"
+    ],
+    "kun_readings": [
+      "-べ"
+    ]
+  },
+  {
+    "kanji": "集",
+    "grade": 3,
+    "stroke_count": 12,
+    "meanings": [
+      "congregate",
+      "flock",
+      "gather",
+      "meet",
+      "swarm"
+    ],
+    "on_readings": [
+      "シュウ"
+    ],
+    "kun_readings": [
+      "あつ.まる",
+      "あつ.める",
+      "つど.う"
+    ]
+  },
+  {
+    "kanji": "遊",
+    "grade": 3,
+    "stroke_count": 12,
+    "meanings": [
+      "play"
+    ],
+    "on_readings": [
+      "ユ",
+      "ユウ"
+    ],
+    "kun_readings": [
+      "あそ.ばす",
+      "あそ.ぶ"
+    ]
+  },
+  {
+    "kanji": "秒",
+    "grade": 3,
+    "stroke_count": 9,
+    "meanings": [
+      "second (1/60 minute)"
+    ],
+    "on_readings": [
+      "ビョウ"
+    ],
+    "kun_readings": []
+  },
+  {
+    "kanji": "軽",
+    "grade": 3,
+    "stroke_count": 12,
+    "meanings": [
+      "lightly",
+      "trifling",
+      "unimportant"
+    ],
+    "on_readings": [
+      "キョウ",
+      "キン",
+      "ケイ"
+    ],
+    "kun_readings": [
+      "かる.い",
+      "かろ.やか",
+      "かろ.んじる"
+    ]
+  },
+  {
+    "kanji": "駅",
+    "grade": 3,
+    "stroke_count": 14,
+    "meanings": [
+      "station"
+    ],
+    "on_readings": [
+      "エキ"
+    ],
+    "kun_readings": []
+  },
+  {
+    "kanji": "級",
+    "grade": 3,
+    "stroke_count": 9,
+    "meanings": [
+      "class",
+      "grade",
+      "rank"
+    ],
+    "on_readings": [
+      "キュウ"
+    ],
+    "kun_readings": []
+  },
+  {
+    "kanji": "進",
+    "grade": 3,
+    "stroke_count": 11,
+    "meanings": [
+      "advance",
+      "proceed",
+      "progress",
+      "promote"
+    ],
+    "on_readings": [
+      "シン"
+    ],
+    "kun_readings": [
+      "すす.む",
+      "すす.める"
+    ]
+  },
+  {
+    "kanji": "農",
+    "grade": 3,
+    "stroke_count": 13,
+    "meanings": [
+      "agriculture",
+      "farmers"
+    ],
+    "on_readings": [
+      "ノウ"
+    ],
+    "kun_readings": []
+  },
+  {
+    "kanji": "身",
+    "grade": 3,
+    "stroke_count": 7,
+    "meanings": [
+      "one's station in life",
+      "person",
+      "somebody"
+    ],
+    "on_readings": [
+      "シン"
+    ],
+    "kun_readings": [
+      "み"
+    ]
+  },
+  {
+    "kanji": "終",
+    "grade": 3,
+    "stroke_count": 11,
+    "meanings": [
+      "end",
+      "finish"
+    ],
+    "on_readings": [
+      "シュウ"
+    ],
+    "kun_readings": [
+      "-お.わる",
+      "お.える",
+      "お.わる",
+      "おわ.る",
+      "つい",
+      "つい.に"
+    ]
+  },
+  {
+    "kanji": "練",
+    "grade": 3,
+    "stroke_count": 14,
+    "meanings": [
+      "drill",
+      "gloss",
+      "polish",
+      "practice",
+      "refine",
+      "train"
+    ],
+    "on_readings": [
+      "レン"
+    ],
+    "kun_readings": [
+      "ね.り",
+      "ね.る"
+    ]
+  },
+  {
+    "kanji": "配",
+    "grade": 3,
+    "stroke_count": 10,
+    "meanings": [
+      "distribute",
+      "exile",
+      "rationing",
+      "spouse"
+    ],
+    "on_readings": [
+      "ハイ"
+    ],
+    "kun_readings": [
+      "くば.る"
+    ]
+  },
+  {
+    "kanji": "血",
+    "grade": 3,
+    "stroke_count": 6,
+    "meanings": [
+      "blood"
+    ],
+    "on_readings": [
+      "ケツ"
+    ],
+    "kun_readings": [
+      "ち"
+    ]
+  },
+  {
+    "kanji": "題",
+    "grade": 3,
+    "stroke_count": 18,
+    "meanings": [
+      "subject",
+      "topic"
+    ],
+    "on_readings": [
+      "ダイ"
+    ],
+    "kun_readings": []
+  },
+  {
+    "kanji": "館",
+    "grade": 3,
+    "stroke_count": 16,
+    "meanings": [
+      "building",
+      "large building",
+      "mansion",
+      "palace"
+    ],
+    "on_readings": [
+      "カン"
+    ],
+    "kun_readings": [
+      "たて",
+      "やかた"
+    ]
+  },
+  {
+    "kanji": "陽",
+    "grade": 3,
+    "stroke_count": 12,
+    "meanings": [
+      "daytime",
+      "heaven",
+      "male",
+      "positive",
+      "sunshine",
+      "yang principle"
+    ],
+    "on_readings": [
+      "ヨウ"
+    ],
+    "kun_readings": [
+      "ひ"
+    ]
+  },
+  {
+    "kanji": "酒",
+    "grade": 3,
+    "stroke_count": 10,
+    "meanings": [
+      "alcohol",
+      "sake"
+    ],
+    "on_readings": [
+      "シュ"
+    ],
+    "kun_readings": [
+      "さか-",
+      "さけ"
+    ]
+  },
+  {
+    "kanji": "表",
+    "grade": 3,
+    "stroke_count": 8,
+    "meanings": [
+      "chart",
+      "diagram",
+      "surface",
+      "table"
+    ],
+    "on_readings": [
+      "ヒョウ"
+    ],
+    "kun_readings": [
+      "-おもて",
+      "あら.わす",
+      "あらわ.す",
+      "あらわ.れる",
+      "おもて"
+    ]
+  },
+  {
+    "kanji": "負",
+    "grade": 3,
+    "stroke_count": 9,
+    "meanings": [
+      "-",
+      "assume a responsibility",
+      "bear",
+      "defeat",
+      "minus",
+      "negative",
+      "owe"
+    ],
+    "on_readings": [
+      "フ"
+    ],
+    "kun_readings": [
+      "お.う",
+      "ま.かす",
+      "ま.ける"
+    ]
+  },
+  {
+    "kanji": "追",
+    "grade": 3,
+    "stroke_count": 9,
+    "meanings": [
+      "chase",
+      "drive away",
+      "follow",
+      "meanwhile",
+      "pursue"
+    ],
+    "on_readings": [
+      "ツイ"
+    ],
+    "kun_readings": [
+      "お.う"
+    ]
+  },
+  {
+    "kanji": "運",
+    "grade": 3,
+    "stroke_count": 12,
+    "meanings": [
+      "advance",
+      "carry",
+      "destiny",
+      "fate",
+      "lot",
+      "luck",
+      "progress",
+      "transport"
+    ],
+    "on_readings": [
+      "ウン"
+    ],
+    "kun_readings": [
+      "はこ.ぶ"
+    ]
+  },
+  {
+    "kanji": "送",
+    "grade": 3,
+    "stroke_count": 9,
+    "meanings": [
+      "escort",
+      "send"
+    ],
+    "on_readings": [
+      "ソウ"
+    ],
+    "kun_readings": [
+      "おく.る"
+    ]
+  },
+  {
+    "kanji": "重",
+    "grade": 3,
+    "stroke_count": 9,
+    "meanings": [
+      "-fold",
+      "esteem",
+      "heap up",
+      "heavy",
+      "important",
+      "nest of boxes",
+      "pile up",
+      "respect"
+    ],
+    "on_readings": [
+      "ジュウ",
+      "チョウ"
+    ],
+    "kun_readings": [
+      "え",
+      "おも",
+      "おも.い",
+      "おも.なう",
+      "おも.り",
+      "かさ.なる",
+      "かさ.ねる"
+    ]
+  },
+  {
+    "kanji": "銀",
+    "grade": 3,
+    "stroke_count": 14,
+    "meanings": [
+      "silver"
+    ],
+    "on_readings": [
+      "ギン"
+    ],
+    "kun_readings": [
+      "しろがね"
+    ]
+  },
+  {
+    "kanji": "路",
+    "grade": 3,
+    "stroke_count": 13,
+    "meanings": [
+      "distance",
+      "path",
+      "road",
+      "route"
+    ],
+    "on_readings": [
+      "ル",
+      "ロ"
+    ],
+    "kun_readings": [
+      "-じ",
+      "みち"
+    ]
+  },
+  {
+    "kanji": "階",
+    "grade": 3,
+    "stroke_count": 12,
+    "meanings": [
+      "counter for storeys of a building",
+      "stair",
+      "storey"
+    ],
+    "on_readings": [
+      "カイ"
+    ],
+    "kun_readings": [
+      "きざはし"
+    ]
+  },
+  {
+    "kanji": "返",
+    "grade": 3,
+    "stroke_count": 7,
+    "meanings": [
+      "answer",
+      "fade",
+      "repay",
+      "return"
+    ],
+    "on_readings": [
+      "ヘン"
+    ],
+    "kun_readings": [
+      "-かえ.す",
+      "-かえ.る",
+      "かえ.す",
+      "かえ.る"
+    ]
+  },
+  {
+    "kanji": "鉄",
+    "grade": 3,
+    "stroke_count": 13,
+    "meanings": [
+      "iron"
+    ],
+    "on_readings": [
+      "テツ"
+    ],
+    "kun_readings": [
+      "くろがね"
+    ]
+  },
+  {
+    "kanji": "開",
+    "grade": 3,
+    "stroke_count": 12,
+    "meanings": [
+      "open",
+      "unfold",
+      "unseal"
+    ],
+    "on_readings": [
+      "カイ"
+    ],
+    "kun_readings": [
+      "-びら.き",
+      "あ.く",
+      "あ.ける",
+      "ひら.き",
+      "ひら.く",
+      "ひら.ける"
+    ]
+  },
+  {
+    "kanji": "速",
+    "grade": 3,
+    "stroke_count": 10,
+    "meanings": [
+      "fast",
+      "quick"
+    ],
+    "on_readings": [
+      "ソク"
+    ],
+    "kun_readings": [
+      "すみ.やか",
+      "はや-",
+      "はや.い",
+      "はや.める"
+    ]
+  },
+  {
+    "kanji": "起",
+    "grade": 3,
+    "stroke_count": 10,
+    "meanings": [
+      "get up",
+      "rouse",
+      "wake up"
+    ],
+    "on_readings": [
+      "キ"
+    ],
+    "kun_readings": [
+      "お.きる",
+      "お.こす",
+      "お.こる",
+      "おこ.す",
+      "た.つ"
+    ]
+  },
+  {
+    "kanji": "飲",
+    "grade": 3,
+    "stroke_count": 12,
+    "meanings": [
+      "drink",
+      "smoke",
+      "take"
+    ],
+    "on_readings": [
+      "イン",
+      "オン"
+    ],
+    "kun_readings": [
+      "-の.み",
+      "の.む"
+    ]
+  },
+  {
+    "kanji": "院",
+    "grade": 3,
+    "stroke_count": 10,
+    "meanings": [
+      "Inst.",
+      "institution",
+      "mansion",
+      "school",
+      "temple"
+    ],
+    "on_readings": [
+      "イン"
+    ],
+    "kun_readings": []
+  },
+  {
+    "kanji": "面",
+    "grade": 3,
+    "stroke_count": 9,
+    "meanings": [
+      "face",
+      "features",
+      "mask",
+      "surface"
+    ],
+    "on_readings": [
+      "ベン",
+      "メン"
+    ],
+    "kun_readings": [
+      "おも",
+      "おもて",
+      "つら"
+    ]
+  },
+  {
+    "kanji": "鼻",
+    "grade": 3,
+    "stroke_count": 14,
+    "meanings": [
+      "nose",
+      "snout"
+    ],
+    "on_readings": [
+      "ビ"
+    ],
+    "kun_readings": [
+      "はな"
+    ]
+  }
+]

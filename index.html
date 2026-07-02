@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>漢検マスター - 漢字検定対策アプリ</title>
+  <!-- Google Fonts: Inter & Noto Serif JP -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Noto+Serif+JP:wght@500;700;900&family=Noto+Sans+JP:wght@400;500;700&display=swap"
+    rel="stylesheet">
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#121214">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+
+<body class="dark-theme">
+  <!-- App Container -->
+  <div id="app" class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo">
+        <span class="logo-accent">漢検</span>マスター
+      </div>
+      <div id="header-actions" class="header-actions">
+        <!-- Settings button will be here -->
+        <button id="btn-settings" class="icon-button" aria-label="設定">
+          <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z">
+            </path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main View Routing Container -->
+    <main id="main-content" class="main-content">
+
+      <!-- VIEW: HOME -->
+      <section id="view-home" class="app-view active">
+        <div class="hero-section">
+          <h1>合格へのステップ</h1>
+          <p class="hero-sub font-japanese">手書きで学ぶ、漢字検定対策の新しいカタチ</p>
+        </div>
+
+        <div class="grades-grid">
+          <!-- 10級 -->
+          <div class="grade-card" data-grade="10">
+            <div class="grade-badge">10級</div>
+            <div class="grade-info">
+              <h3>小学1年生レベル</h3>
+              <p class="grade-char-count">配当漢字 80字</p>
+            </div>
+            <div class="grade-progress-container">
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 0%"></div>
+              </div>
+              <span class="progress-text">学んだ漢字: 0/80 (0%)</span>
+            </div>
+            <button class="btn btn-primary start-grade-btn">始める</button>
+          </div>
+
+          <!-- locked grades 9 - 2 -->
+          <div class="grade-card locked" data-grade="9">
+            <div class="grade-badge">9級</div>
+            <div class="grade-info">
+              <h3>小学2年生レベル</h3>
+              <p class="grade-char-count">配当漢字 240字</p>
+            </div>
+            <div class="lock-indicator">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <span>ダウンロード可能</span>
+            </div>
+            <button class="btn btn-outline download-grade-btn">開放する</button>
+          </div>
+
+          <div class="grade-card locked" data-grade="8">
+            <div class="grade-badge">8級</div>
+            <div class="grade-info">
+              <h3>小学3年生レベル</h3>
+              <p class="grade-char-count">配当漢字 440字</p>
+            </div>
+            <div class="lock-indicator">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <span>ダウンロード可能</span>
+            </div>
+            <button class="btn btn-outline download-grade-btn">開放する</button>
+          </div>
+
+          <!-- 7級 -->
+          <div class="grade-card locked" data-grade="7">
+            <div class="grade-badge">7級</div>
+            <div class="grade-info">
+              <h3>小学4年生レベル</h3>
+              <p class="grade-char-count">配当漢字 642字</p>
+            </div>
+            <div class="lock-indicator">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <span>ダウンロード可能</span>
+            </div>
+            <button class="btn btn-outline download-grade-btn">開放する</button>
+          </div>
+
+          <!-- 6級 -->
+          <div class="grade-card locked" data-grade="6">
+            <div class="grade-badge">6級</div>
+            <div class="grade-info">
+              <h3>小学5年生レベル</h3>
+              <p class="grade-char-count">配当漢字 835字</p>
+            </div>
+            <div class="lock-indicator">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <span>ダウンロード可能</span>
+            </div>
+            <button class="btn btn-outline download-grade-btn">開放する</button>
+          </div>
+
+          <!-- 5級 -->
+          <div class="grade-card locked" data-grade="5">
+            <div class="grade-badge">5級</div>
+            <div class="grade-info">
+              <h3>小学6年生レベル</h3>
+              <p class="grade-char-count">配当漢字 1,026字</p>
+            </div>
+            <div class="lock-indicator">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <span>ダウンロード可能</span>
+            </div>
+            <button class="btn btn-outline download-grade-btn">開放する</button>
+          </div>
+
+          <!-- 4級 -->
+          <div class="grade-card locked" data-grade="4">
+            <div class="grade-badge">4級〜2級</div>
+            <div class="grade-info">
+              <h3>中学校・高校レベル</h3>
+              <p class="grade-char-count">配当漢字 1,110字 (中学・高校常用漢字)</p>
+            </div>
+            <div class="lock-indicator">
+              <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+                stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <span>ダウンロード可能</span>
+            </div>
+            <button class="btn btn-outline download-grade-btn">開放する</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW: STUDY (KANJI FLASHCARDS) -->
+      <section id="view-study" class="app-view">
+        <div class="view-header">
+          <button class="btn-back icon-button" aria-label="戻る">
+            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+          </button>
+          <h2 class="view-title">漢字学習 (10級)</h2>
+          <div class="view-header-right">
+            <span id="study-progress">1 / 80</span>
+          </div>
+        </div>
+
+        <div class="card-container">
+          <div id="kanji-flashcard" class="flashcard">
+            <!-- Front of Card: Kanji and Stroke Show -->
+            <div class="card-inner">
+              <div class="card-front">
+                <div class="kanji-display font-serif" id="study-kanji">一</div>
+                <div class="kanji-details">
+                  <div class="detail-row">
+                    <span class="detail-label">画数:</span>
+                    <span class="detail-value" id="study-strokes">1画</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">音読み:</span>
+                    <span class="detail-value font-japanese" id="study-onyomi">イチ、イツ</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">訓読み:</span>
+                    <span class="detail-value font-japanese" id="study-kunyomi">ひと-、ひと.つ</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="stroke-order-helper block-container">
+            <div class="block-header">書き順</div>
+            <div class="stroke-svg-container" id="stroke-svg-container">
+              <!-- Animated or diagrammed strokes from KanjiVG will render here -->
+              <span class="placeholder-text">書き順データを読み込み中...</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="study-actions">
+          <button id="btn-study-prev" class="btn btn-outline">前へ</button>
+          <button id="btn-study-test" class="btn btn-primary">この漢字をテスト</button>
+          <button id="btn-study-next" class="btn btn-outline">次へ</button>
+        </div>
+      </section>
+
+      <!-- VIEW: QUIZ SELECT -->
+      <section id="view-quiz-select" class="app-view">
+        <div class="view-header">
+          <button class="btn-back icon-button" aria-label="戻る">
+            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+          </button>
+          <h2 class="view-title">テスト選択</h2>
+        </div>
+
+        <div class="mode-select-grid">
+          <!-- Quiz types -->
+          <div class="mode-card" data-mode="reading">
+            <div class="mode-icon bg-blue">読</div>
+            <div class="mode-info">
+              <h3>「読み」クイズ</h3>
+              <p>漢字の正しい読み方を4択から選択します。</p>
+            </div>
+            <button class="btn btn-primary start-quiz-btn">挑戦する</button>
+          </div>
+
+          <div class="mode-card" data-mode="writing">
+            <div class="mode-icon bg-purple">書</div>
+            <div class="mode-info">
+              <h3>「書き取り」試験</h3>
+              <p>ひらがなに対応する漢字を手書きで回答します。</p>
+            </div>
+            <button class="btn btn-primary start-quiz-btn">挑戦する</button>
+          </div>
+
+          <div class="mode-card" data-mode="strokes">
+            <div class="mode-icon bg-emerald">画</div>
+            <div class="mode-info">
+              <h3>「画数」クイズ</h3>
+              <p>漢字の総画数を4択から答えます。</p>
+            </div>
+            <button class="btn btn-primary start-quiz-btn">挑戦する</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW: QUIZ ACTIVE (READING & STROKES) -->
+      <section id="view-quiz-active" class="app-view">
+        <div class="view-header">
+          <button id="btn-exit-quiz" class="icon-button" aria-label="中断">
+            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+          <span class="quiz-title-indicator" id="quiz-type-title">「読み」クイズ</span>
+          <div class="quiz-progress-lbl" id="quiz-q-num">1 / 10</div>
+        </div>
+
+        <div class="quiz-progress-bar-container">
+          <div class="quiz-progress-bar" id="quiz-progress-bar" style="width: 10%"></div>
+        </div>
+
+        <div class="quiz-body">
+          <div class="quiz-question-container">
+            <div class="quiz-question-character font-serif" id="quiz-q-char">一</div>
+            <div class="quiz-question-prompt" id="quiz-q-prompt">この漢字の読み方は？</div>
+          </div>
+
+          <div class="quiz-choices-grid" id="quiz-choices">
+            <!-- 4 Choices Buttons generated standard -->
+            <button class="choice-btn">選択肢 1</button>
+            <button class="choice-btn">選択肢 2</button>
+            <button class="choice-btn">選択肢 3</button>
+            <button class="choice-btn">選択肢 4</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW: WRITING QUIZ ACTIVE -->
+      <section id="view-quiz-writing" class="app-view">
+        <div class="view-header">
+          <button id="btn-exit-writing-quiz" class="icon-button" aria-label="中断">
+            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+          <span class="quiz-title-indicator">「書き取り」試験</span>
+          <div class="quiz-progress-lbl" id="writing-quiz-q-num">1 / 10</div>
+        </div>
+
+        <div class="quiz-progress-bar-container">
+          <div class="quiz-progress-bar" id="writing-quiz-progress-bar" style="width: 10%"></div>
+        </div>
+
+        <div class="quiz-body flex-column">
+          <!-- Question prompt -->
+          <div class="writing-question-banner">
+            <div class="writing-prompt-text font-japanese" id="writing-q-prompt">ひらがなを漢字に：<span class="highlight"
+                id="writing-q-word">ひがし</span></div>
+            <div class="writing-meaning-text" id="writing-q-hint">ヒント: 太陽が昇る方向</div>
+          </div>
+
+          <!-- Drawing canvas layer -->
+          <div class="canvas-wrapper">
+            <canvas id="handwriting-canvas" width="300" height="300"></canvas>
+            <div class="canvas-grid-lines"></div>
+            <!-- Feedback Overlay (Check/Cross inside quiz view) -->
+            <div id="grader-overlay" class="grader-overlay hidden">
+              <span class="overlay-symbol">✓</span>
+            </div>
+          </div>
+
+          <!-- Canvas utilities -->
+          <div class="canvas-controls">
+            <button id="btn-canvas-clear" class="btn btn-outline btn-sm">クリア</button>
+            <button id="btn-canvas-check" class="btn btn-primary btn-sm">判定する</button>
+          </div>
+
+          <!-- Self-assessment overlay panel (shown after drawing is checked or in self-mode) -->
+          <div id="grading-panel" class="grading-panel hidden">
+            <div class="correct-kanji-reveal">
+              <div class="revealed-kanji font-serif" id="reveal-correct-kanji">東</div>
+              <div class="reveal-details font-japanese">
+                音: <span id="reveal-onyomi">トウ</span><br />
+                訓: <span id="reveal-kunyomi">ひがし</span>
+              </div>
+            </div>
+
+            <div id="auto-grader-result" class="auto-grader-result text-center">
+              自動判定結果: <span id="auto-result-text" class="status-correct">正解 🎉</span> (一致率 <span
+                id="auto-result-percentage">85%</span>)
+            </div>
+
+            <div class="self-grading-buttons">
+              <button id="btn-self-correct" class="btn btn-success">正解！ (O)</button>
+              <button id="btn-self-incorrect" class="btn btn-danger">間違い (X)</button>
+            </div>
+            <button id="btn-writing-next" class="btn btn-primary w-full mt-2 hidden">次の問題</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW: RESULTS -->
+      <section id="view-results" class="app-view">
+        <div class="results-container text-center">
+          <div class="results-visual">
+            <div class="score-circle">
+              <span class="score-num" id="results-score">8/10</span>
+              <span class="score-lbl">正解</span>
+            </div>
+          </div>
+
+          <h2 id="results-title">よくできました！</h2>
+          <p class="results-msg" id="results-message">あと少しで満点です。間違えた漢字を復習しましょう！</p>
+
+          <!-- List of history review -->
+          <div class="wrong-kanji-review block-container">
+            <div class="block-header">復習用の漢字</div>
+            <div class="wrong-list-scroll scrollable-y" id="wrong-kanji-list">
+              <!-- Wrong kanji generated here -->
+            </div>
+          </div>
+
+          <div class="flex-column gap-2 mt-4">
+            <button id="btn-results-retry" class="btn btn-primary">もう一度挑戦</button>
+            <button id="btn-results-home" class="btn btn-outline">ホームに戻る</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW: SETTINGS -->
+      <section id="view-settings" class="app-view">
+        <div class="view-header">
+          <button class="btn-back icon-button" aria-label="戻る">
+            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+          </button>
+          <h2 class="view-title">設定</h2>
+        </div>
+
+        <div class="settings-list">
+          <div class="settings-group">
+            <div class="settings-group-title">採点モード</div>
+            <label class="settings-item">
+              <div class="settings-item-info">
+                <span class="settings-item-title">デフォルト採点方法</span>
+                <span class="settings-item-desc">書き取り試験の採点方式です。</span>
+              </div>
+              <select id="setting-grader-mode" class="select-input">
+                <option value="auto">自動判定 (高精度/フォールバックつき)</option>
+                <option value="self">自己採点</option>
+              </select>
+            </label>
+            <div class="settings-item">
+              <div class="settings-item-info">
+                <span class="settings-item-title">現在の採点エンジン</span>
+                <span class="settings-item-desc" id="current-recognition-engine-status">判定エンジン確認中...</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-group">
+            <div class="settings-group-title">データ管理</div>
+            <div class="settings-item">
+              <div class="settings-item-info">
+                <span class="settings-item-title">漢字データの同期</span>
+                <span class="settings-item-desc">インターネット接続時に最新データと同期します。</span>
+              </div>
+              <button id="btn-sync-data" class="btn btn-outline btn-sm">同期する</button>
+            </div>
+            <div class="settings-item">
+              <div class="settings-item-info">
+                <span class="settings-item-title">全学習履歴の消去</span>
+                <span class="settings-item-desc">学習の進捗と履歴をリセットします。この操作は取り消せません。</span>
+              </div>
+              <button id="btn-reset-data" class="btn btn-danger btn-sm">全リセット</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Navigation tabs (Visible on bottom) -->
+    <nav class="app-nav">
+      <a href="#home" class="nav-item active" id="nav-home">
+        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        <span>ホーム</span>
+      </a>
+      <a href="#quiz-select" class="nav-item" id="nav-quiz">
+        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 20h9"></path>
+          <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+        </svg>
+        <span>テスト</span>
+      </a>
+      <a href="#settings" class="nav-item" id="nav-settings">
+        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path
+            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z">
+          </path>
+        </svg>
+        <span>設定</span>
+      </a>
+    </nav>
+  </div>
+
+  <!-- JavaScript scripts (deferred type module structure) -->
+  <script type="module" src="js/app.js"></script>
+</body>
+
+</html>
