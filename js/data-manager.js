@@ -91,6 +91,21 @@ export const dataManager = {
             const tx = db.transaction('kanji', 'readwrite');
             const store = tx.objectStore('kanji');
 
+            // Clear old entries for this grade before inserting new data
+            const allReq = store.getAll();
+            await new Promise((resolve, reject) => {
+                allReq.onsuccess = () => {
+                    const oldEntries = allReq.result || [];
+                    for (const entry of oldEntries) {
+                        if (entry.kentei_grade === gradeId && entry.kanji !== '__word_relations__') {
+                            store.delete(entry.kanji);
+                        }
+                    }
+                    resolve();
+                };
+                allReq.onerror = () => reject(allReq.error);
+            });
+
             for (const item of list) {
                 store.put(item);
             }

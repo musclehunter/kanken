@@ -9,16 +9,19 @@
 import { storage } from './storage.js';
 import { dataManager } from './data-manager.js';
 import { QuizSession } from './quiz.js';
+import { HandwritingCanvas } from './canvas.js';
 
 // Application version (bump on each release)
-export const APP_VERSION = '2.0.0';
+export const APP_VERSION = '2.1.2';
 
 class VIEWS_ROUTER {
     constructor() {
-        this.currentGrade = 10; // Default is 10級 (Grade 1)
+        this.currentGrade = parseInt(storage.getSetting('current_grade', '10'), 10);
         this.kanjiData = []; // Current active kanji list
         this.studyIndex = 0; // Current card in flashcard study mode
+        this.studyOrder = 'default'; // Current study order mode
         this.activeQuiz = null; // Active QuizSession instance
+        this.studyCanvas = null; // Practice canvas for study mode
         this.unlockedGrades = this.getUnlockedGradesList();
 
         this.init();
@@ -29,16 +32,32 @@ class VIEWS_ROUTER {
         this.setupViewRouting();
         this.setupUIHandlers();
 
+        // Force SW update check
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistration().then(reg => {
+                if (reg) reg.update();
+            });
+        }
+
         const versionEl = document.getElementById('app-version');
-        if (versionEl) versionEl.innerText = `v${APP_VERSION}`;
+        if (versionEl) {
+            let versionText = `v${APP_VERSION}`;
+            try {
+                const manifest = await fetch('./manifest.json').then(r => r.json());
+                if (manifest.version && manifest.version !== APP_VERSION) {
+                    versionText += ` (manifest: v${manifest.version})`;
+                }
+            } catch (e) { /* ignore */ }
+            versionEl.innerText = versionText;
+        }
 
         const engineText = await graderEngineStatus();
         document.getElementById('current-recognition-engine-status').innerText = engineText;
 
-        this.kanjiData = await dataManager.getKanjiList(10);
+        this.kanjiData = await dataManager.getKanjiList(this.currentGrade);
         if (this.kanjiData.length === 0) {
-            await dataManager.downloadGrade(10);
-            this.kanjiData = await dataManager.getKanjiList(10);
+            await dataManager.downloadGrade(this.currentGrade);
+            this.kanjiData = await dataManager.getKanjiList(this.currentGrade);
         }
 
         this.handleRoute(window.location.hash);
@@ -87,6 +106,12 @@ class VIEWS_ROUTER {
                 this.renderModeSelectScreen();
                 break;
 
+            case 'study-order':
+                targetViewId = 'view-study-order';
+                navActiveId = 'nav-study';
+                this.renderStudyOrderScreen();
+                break;
+
             case 'study':
                 targetViewId = 'view-study';
                 navActiveId = 'nav-study';
@@ -96,6 +121,7 @@ class VIEWS_ROUTER {
             case 'quiz-select':
                 targetViewId = 'view-quiz-select';
                 navActiveId = 'nav-quiz';
+                this.renderQuizSelectScreen();
                 break;
 
             case 'quiz-active':
@@ -137,8 +163,37 @@ class VIEWS_ROUTER {
             activeNav.classList.add('active');
         }
 
+        // Update breadcrumb
+        this.updateBreadcrumb(route);
+
         // Scroll window back to top on transitions
         document.getElementById('main-content').scrollTop = 0;
+    }
+
+    updateBreadcrumb(route) {
+        const breadcrumb = document.getElementById('breadcrumb');
+        const breadcrumbText = document.getElementById('breadcrumb-text');
+        const gradeLabels = { 2.5: '準2級', 1.5: '準1級' };
+        const gradeLabel = gradeLabels[this.currentGrade] || `${this.currentGrade}級`;
+
+        const crumbs = {
+            'home': null,
+            'mode-select': `${gradeLabel}`,            'study-order': `${gradeLabel} › 学習 › 順序選択`,
+            'study': `${gradeLabel} › 学習`,
+            'quiz-select': `${gradeLabel} › テスト`,
+            'quiz-active': `${gradeLabel} › テスト › 進行中`,
+            'quiz-writing': `${gradeLabel} › テスト › 書き取り`,
+            'results': `${gradeLabel} › テスト › 結果`,
+            'settings': '設定'
+        };
+
+        const text = crumbs[route];
+        if (text) {
+            breadcrumbText.innerText = text;
+            breadcrumb.style.display = 'block';
+        } else {
+            breadcrumb.style.display = 'none';
+        }
     }
 
     // --- UI BINDINGS ---
@@ -156,6 +211,7 @@ class VIEWS_ROUTER {
         document.querySelector('.start-grade-btn').onclick = () => {
             this.currentGrade = 10;
             this.studyIndex = 0;
+            storage.saveSetting('current_grade', this.currentGrade);
             window.location.hash = 'mode-select';
         };
 
@@ -188,22 +244,48 @@ class VIEWS_ROUTER {
                 this.kanjiData = await dataManager.getKanjiList(this.currentGrade);
                 if (mode === 'study') {
                     this.studyIndex = 0;
-                    this.kanjiData = storage.getWeightedKanjiOrder(this.kanjiData);
-                    window.location.hash = 'study';
+                    window.location.hash = 'study-order';
                 } else if (mode === 'test') {
                     window.location.hash = 'quiz-select';
                 }
             };
         });
 
+        // Study order selection
+        document.querySelectorAll('.order-card').forEach(btn => {
+            btn.onclick = async () => {
+                this.studyOrder = btn.dataset.order;
+                this.kanjiData = await dataManager.getKanjiList(this.currentGrade);
+                this.kanjiData = this.applyStudyOrder(this.kanjiData);
+                this.studyIndex = 0;
+                window.location.hash = 'study';
+            };
+        });
+
         document.getElementById('btn-study-prev').onclick = () => this.navigateStudyCard(-1);
         document.getElementById('btn-study-next').onclick = () => this.navigateStudyCard(1);
+
+        document.getElementById('btn-study-mark').onclick = () => {
+            const k = this.kanjiData[this.studyIndex];
+            if (!k) return;
+            const isStudied = storage.isStudied(k.kanji);
+            if (isStudied) {
+                storage.unmarkStudied(k.kanji);
+            } else {
+                storage.markStudied(k.kanji);
+            }
+            this.updateMarkButton(k.kanji);
+        };
 
         document.getElementById('btn-study-test').onclick = () => {
             const currentKanjiItem = this.kanjiData[this.studyIndex];
             this.activeQuiz = new QuizSession(this.currentGrade, 'writing', [currentKanjiItem], this);
             this.activeQuiz.questions = [currentKanjiItem];
             window.location.hash = 'quiz-writing';
+        };
+
+        document.getElementById('btn-study-canvas-clear').onclick = () => {
+            if (this.studyCanvas) this.studyCanvas.clear();
         };
 
         document.querySelectorAll('.mode-card .start-quiz-btn').forEach(btn => {
@@ -224,15 +306,6 @@ class VIEWS_ROUTER {
                 }
             };
         });
-
-        const exitQuiz = () => {
-            if (confirm('テストを途中で終了しますか？これまでの回答は保存されません。')) {
-                this.activeQuiz = null;
-                window.location.hash = 'quiz-select';
-            }
-        };
-        document.getElementById('btn-exit-quiz').onclick = exitQuiz;
-        document.getElementById('btn-exit-writing-quiz').onclick = exitQuiz;
     }
 
     // Helper trigger to redirect straight to single study from review badges
@@ -248,6 +321,66 @@ class VIEWS_ROUTER {
         const gradeLabels = { 2.5: '準2級', 1.5: '準1級' };
         const label = gradeLabels[this.currentGrade] || `${this.currentGrade}級`;
         document.getElementById('mode-select-title').innerText = `${label} - モード選択`;
+    }
+
+    renderStudyOrderScreen() {
+        // Nothing dynamic needed, cards are static in HTML
+    }
+
+    renderQuizSelectScreen() {
+        const gradeLabels = { 2.5: '準2級', 1.5: '準1級' };
+        const label = gradeLabels[this.currentGrade] || `${this.currentGrade}級`;
+        const titleEl = document.querySelector('#view-quiz-select .view-title');
+        if (titleEl) titleEl.innerText = `${label} - テスト選択`;
+    }
+
+    applyStudyOrder(list) {
+        const sorted = [...list];
+        switch (this.studyOrder) {
+            case 'random':
+                return sorted.sort(() => 0.5 - Math.random());
+            case 'strokes':
+                return sorted.sort((a, b) => (a.stroke_count || 0) - (b.stroke_count || 0));
+            case 'radical':
+                return sorted.sort((a, b) => {
+                    const ra = (a.radical || '') + (a.radical_name || '');
+                    const rb = (b.radical || '') + (b.radical_name || '');
+                    return ra.localeCompare(rb, 'ja');
+                });
+            case 'onyomi':
+                return sorted.sort((a, b) => {
+                    const oa = (a.on_readings[0] || '');
+                    const ob = (b.on_readings[0] || '');
+                    return oa.localeCompare(ob, 'ja');
+                });
+            case 'kunyomi':
+                return sorted.sort((a, b) => {
+                    const ka = (a.kun_readings[0] || '').replace(/[.\-]/g, '');
+                    const kb = (b.kun_readings[0] || '').replace(/[.\-]/g, '');
+                    return ka.localeCompare(kb, 'ja');
+                });
+            case 'unstudied':
+                return sorted.filter(k => !storage.isStudied(k.kanji));
+            case 'weak':
+                return storage.getWeightedKanjiOrder(sorted);
+            default:
+                return sorted;
+        }
+    }
+
+    updateMarkButton(kanji) {
+        const btn = document.getElementById('btn-study-mark');
+        if (!btn) return;
+        const isStudied = storage.isStudied(kanji);
+        if (isStudied) {
+            btn.innerText = '覚えた ✓';
+            btn.classList.remove('btn-success');
+            btn.classList.add('btn-outline');
+        } else {
+            btn.innerText = '覚えた';
+            btn.classList.remove('btn-outline');
+            btn.classList.add('btn-success');
+        }
     }
 
     renderHomeScreen() {
@@ -273,22 +406,52 @@ class VIEWS_ROUTER {
         const gradeLabels = { 2.5: '準2級', 1.5: '準1級' };
 
         const progress = storage.getGradeProgress(this.kanjiData);
-        const gr10Card = document.querySelector('.grade-card[data-grade="10"]');
-        if (gr10Card) {
-            gr10Card.querySelector('.progress-fill').style.width = `${progress.percentage}%`;
-            gr10Card.querySelector('.progress-text').innerText = `学んだ漢字: ${progress.studied}/${progress.total} (${progress.percentage}%)`;
+
+        // Show "continue" section for the currently selected grade
+        const continueSection = document.getElementById('continue-section');
+        const continueLabel = document.getElementById('continue-grade-label');
+        const continueProgress = document.getElementById('continue-progress-text');
+        const continueBtn = document.getElementById('btn-continue-grade');
+        if (continueSection && continueLabel && continueBtn) {
+            continueLabel.innerText = gradeLabels[this.currentGrade] || `${this.currentGrade}級`;
+            continueProgress.innerText = `学んだ漢字: ${progress.studied}/${progress.total} (${progress.percentage}%)`;
+            continueSection.style.display = 'flex';
+            continueBtn.onclick = () => {
+                window.location.hash = 'mode-select';
+            };
+        }
+
+        // Highlight the currently selected grade card
+        document.querySelectorAll('.grade-card').forEach(c => c.classList.remove('selected'));
+        const currentCard = document.querySelector(`.grade-card[data-grade="${this.currentGrade}"]`);
+        if (currentCard) {
+            currentCard.classList.add('selected');
+            const progFill = currentCard.querySelector('.progress-fill');
+            const progText = currentCard.querySelector('.progress-text');
+            if (progFill) progFill.style.width = `${progress.percentage}%`;
+            if (progText) progText.innerText = `学んだ漢字: ${progress.studied}/${progress.total} (${progress.percentage}%)`;
         }
 
         this.unlockedGrades = this.getUnlockedGradesList();
+        const gradeNewCounts = {
+            10: '80', 9: '160', 8: '200', 7: '202',
+            6: '193', 5: '191', 4: '313', 3: '284',
+            2.5: '328', 2: '185', 1.5: '約864', 1: '約3,000'
+        };
+        const gradeLowerCounts = {
+            10: '', 9: ' + 下位 80字', 8: ' + 下位 240字', 7: ' + 下位 440字',
+            6: ' + 下位 642字', 5: ' + 下位 835字', 4: ' + 下位 1,026字', 3: ' + 下位 1,339字',
+            2.5: ' + 下位 1,623字', 2: ' + 下位 1,951字', 1.5: ' + 下位 2,136字', 1: ' + 下位 約3,000字'
+        };
         this.unlockedGrades.forEach(g => {
             const card = document.querySelector(`.grade-card[data-grade="${g}"]`);
             if (card && card.classList.contains('locked')) {
                 card.classList.remove('locked');
                 card.innerHTML = `
-          <div class="grade-badge">${gradeLabels[g] || g + '級'}</div>
           <div class="grade-info">
-            <h3>${gradeNames[g] || '小学校レベル'}</h3>
-            <p class="grade-char-count">配当漢字 ${gradeCounts[g] || '0'}字</p>
+            <h3>${gradeLabels[g] || g + '級'}</h3>
+            <p class="grade-level">${gradeNames[g] || '小学校レベル'}</p>
+            <p class="grade-char-count">配当漢字 ${gradeNewCounts[g] || '0'}字${gradeLowerCounts[g] || ''}</p>
           </div>
           <div class="grade-progress-container" id="progress-${g}">
             <div class="progress-bar">
@@ -311,6 +474,7 @@ class VIEWS_ROUTER {
                 card.querySelector('.start-grade-btn').onclick = async () => {
                     this.currentGrade = g;
                     this.studyIndex = 0;
+                    storage.saveSetting('current_grade', g);
                     this.kanjiData = await dataManager.getKanjiList(g);
                     window.location.hash = 'mode-select';
                 };
@@ -335,6 +499,16 @@ class VIEWS_ROUTER {
         document.getElementById('study-radical').innerText = k.radical_name ? `${k.radical}（${k.radical_name}）` : 'なし';
         document.getElementById('study-onyomi').innerText = k.on_readings.join('、') || 'なし';
         document.getElementById('study-kunyomi').innerText = k.kun_readings.join('、') || 'なし';
+
+        // Update mark button state
+        this.updateMarkButton(k.kanji);
+
+        // Init practice canvas
+        if (!this.studyCanvas) {
+            this.studyCanvas = new HandwritingCanvas('study-practice-canvas');
+        } else {
+            this.studyCanvas.clear();
+        }
 
         const exContainer = document.getElementById('study-examples-container');
         const exList = document.getElementById('study-examples');
@@ -434,6 +608,34 @@ class VIEWS_ROUTER {
                 alert('データをリセットしました。アプリを再読込します。');
                 window.location.hash = 'home';
                 window.location.reload();
+            }
+        };
+
+        // Cache clear handler
+        document.getElementById('btn-clear-cache').onclick = async (e) => {
+            const btn = e.target;
+            btn.innerText = 'クリア中...';
+            btn.disabled = true;
+            try {
+                // Unregister all service workers
+                if ('serviceWorker' in navigator) {
+                    const regs = await navigator.serviceWorker.getRegistrations();
+                    for (const reg of regs) await reg.unregister();
+                }
+                // Clear all caches
+                if ('caches' in window) {
+                    const keys = await caches.keys();
+                    for (const key of keys) await caches.delete(key);
+                }
+                // Clear IndexedDB
+                indexedDB.deleteDatabase('KanjiMasterDB');
+                alert('キャッシュをクリアしました。再読み込みします。');
+                window.location.hash = 'home';
+                window.location.reload();
+            } catch (err) {
+                alert('キャッシュクリアに失敗しました: ' + err.message);
+                btn.innerText = 'キャッシュクリア';
+                btn.disabled = false;
             }
         };
     }

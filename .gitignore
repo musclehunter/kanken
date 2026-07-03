@@ -1,3 +1,6 @@
 node_modules/
 *.log
 .DS_Store
+.build-hash
+.build-version
+__check*.js

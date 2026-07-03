@@ -27,6 +27,7 @@ export const storage = {
                 homophone_correct: 0,
                 same_kun_attempts: 0,
                 same_kun_correct: 0,
+                manually_studied: false,
                 last_attempt: null
             };
         }
@@ -40,6 +41,44 @@ export const storage = {
         record.last_attempt = Date.now();
 
         this.setJson(key, history);
+    },
+
+    // Mark kanji as manually studied (user pressed "覚えた" button)
+    markStudied(kanji) {
+        const key = `${STORAGE_PREFIX}history`;
+        let history = this.getJson(key) || {};
+        if (!history[kanji]) {
+            history[kanji] = {
+                reading_attempts: 0, reading_correct: 0,
+                writing_attempts: 0, writing_correct: 0,
+                radical_attempts: 0, radical_correct: 0,
+                antonym_attempts: 0, antonym_correct: 0,
+                homophone_attempts: 0, homophone_correct: 0,
+                same_kun_attempts: 0, same_kun_correct: 0,
+                manually_studied: false, last_attempt: null
+            };
+        }
+        history[kanji].manually_studied = true;
+        this.setJson(key, history);
+    },
+
+    // Unmark kanji as manually studied
+    unmarkStudied(kanji) {
+        const key = `${STORAGE_PREFIX}history`;
+        let history = this.getJson(key) || {};
+        if (history[kanji]) {
+            history[kanji].manually_studied = false;
+            this.setJson(key, history);
+        }
+    },
+
+    // Check if a kanji is studied (either manually or via quiz)
+    isStudied(kanji) {
+        const record = this.getHistory(kanji);
+        if (!record) return false;
+        if (record.manually_studied) return true;
+        const types = ['reading', 'writing', 'radical', 'antonym', 'homophone', 'same_kun'];
+        return types.some(t => (record[`${t}_attempts`] || 0) > 0);
     },
 
     // Get learning history for all or single kanji
@@ -93,7 +132,7 @@ export const storage = {
             const record = history[item.kanji];
             if (record) {
                 const hasAttempts = types.some(t => (record[`${t}_attempts`] || 0) > 0);
-                if (hasAttempts) totalStudied++;
+                if (hasAttempts || record.manually_studied) totalStudied++;
             }
         });
 
@@ -174,3 +213,4 @@ export const storage = {
         }
     }
 };
+

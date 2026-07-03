@@ -30,8 +30,8 @@ export class QuizSession {
     }
 
     async initSession() {
-        const shuffled = [...this.kanjiList].sort(() => 0.5 - Math.random());
-        this.questions = shuffled.slice(0, Math.min(10, shuffled.length));
+        // Use sequential order (not shuffled) so questions follow study order
+        this.questions = [...this.kanjiList].slice(0, Math.min(10, this.kanjiList.length));
         this.currentIndex = 0;
         this.score = 0;
         this.wrongAnswers = [];
@@ -39,6 +39,18 @@ export class QuizSession {
         if (this.mode === 'antonym' || this.mode === 'same_kun') {
             this.wordRelations = await dataManager.getWordRelations();
         }
+
+        // Update quiz type title
+        const modeTitles = {
+            reading: '「読み」クイズ',
+            writing: '「書き取り」試験',
+            radical: '「部首」クイズ',
+            antonym: '「対義語」クイズ',
+            homophone: '「同音異字」クイズ',
+            same_kun: '「同訓異字」クイズ'
+        };
+        const titleEl = document.getElementById('quiz-type-title');
+        if (titleEl) titleEl.innerText = modeTitles[this.mode] || 'クイズ';
 
         console.log(`Starting ${this.mode} quiz with ${this.questions.length} questions.`);
 
@@ -90,6 +102,9 @@ export class QuizSession {
 
         promptEl.innerText = config.prompt;
         charEl.innerText = q.kanji;
+        const contextEl = document.getElementById('quiz-q-context');
+        contextEl.style.display = 'none';
+        contextEl.innerText = '';
         this[config.render](q);
     }
 
@@ -121,11 +136,28 @@ export class QuizSession {
     }
 
     renderReadingChoices(questionItem) {
-        const correct = questionItem.kun_readings[0] || questionItem.on_readings[0] || '不明';
+        const correctRaw = questionItem.kun_readings[0] || questionItem.on_readings[0] || '不明';
+        const hasOkurigana = correctRaw.includes('.') || correctRaw.includes('-');
 
+        // Show kanji with okurigana if applicable
+        const charEl = document.getElementById('quiz-q-char');
+        if (hasOkurigana) {
+            const okurigana = correctRaw.split(/[.\-]/)[1] || '';
+            charEl.innerHTML = `${questionItem.kanji}<span class="okurigana">${okurigana}</span>`;
+        } else {
+            charEl.innerText = questionItem.kanji;
+        }
+
+        // Correct answer is just the kanji reading part (before dot/hyphen)
+        const correct = hasOkurigana ? correctRaw.split(/[.\-]/)[0] : correctRaw;
+
+        // Build distractor pool - use kanji reading parts only
         const allReadings = new Set();
         this.kanjiList.forEach(k => {
-            k.kun_readings.forEach(r => allReadings.add(r));
+            k.kun_readings.forEach(r => {
+                const parts = r.split(/[.\-]/);
+                allReadings.add(parts[0]);
+            });
             k.on_readings.forEach(r => allReadings.add(r));
         });
 
@@ -134,7 +166,7 @@ export class QuizSession {
         choices.forEach(c => {
             const btn = document.createElement('button');
             btn.className = 'choice-btn font-japanese';
-            btn.innerText = c.replace(/\.|\-/g, '');
+            btn.innerText = c;
             btn.onclick = () => this.handleChoiceClick(btn, c === correct, questionItem);
             document.getElementById('quiz-choices').appendChild(btn);
         });
@@ -193,6 +225,19 @@ export class QuizSession {
         const correct = questionItem.kanji;
         const allKanji = new Set(same.map(k => k.kanji));
         allKanji.add(correct);
+
+        // Show example sentence with blank for context
+        const contextEl = document.getElementById('quiz-q-context');
+        if (questionItem.examples && questionItem.examples.length > 0) {
+            const ex = questionItem.examples[Math.floor(Math.random() * questionItem.examples.length)];
+            const blanked = ex.word.replace(questionItem.kanji, '＿');
+            contextEl.innerHTML = `<span class="context-sentence">${blanked}（${ex.reading}）</span>`;
+            contextEl.style.display = 'block';
+        } else {
+            const meanings = questionItem.meanings.join(', ');
+            contextEl.innerHTML = `<span class="context-sentence">意味: ${meanings}</span>`;
+            contextEl.style.display = 'block';
+        }
 
         document.getElementById('quiz-q-char').innerText = reading;
 
@@ -264,7 +309,11 @@ export class QuizSession {
             storage.saveQuizResult(questionItem.kanji, this.mode, false);
 
             const correctMap = {
-                reading: () => (questionItem.kun_readings[0] || questionItem.on_readings[0] || '').replace(/\.|\-/g, ''),
+                reading: () => {
+                    const raw = questionItem.kun_readings[0] || questionItem.on_readings[0] || '';
+                    const hasOkuri = raw.includes('.') || raw.includes('-');
+                    return hasOkuri ? raw.split(/[.\-]/)[0] : raw;
+                },
                 radical: () => questionItem.radical ? `${questionItem.radical}（${questionItem.radical_name}）` : '',
                 antonym: () => {
                     const ants = (this.wordRelations?.antonyms || []).filter(a => a.word.includes(questionItem.kanji));
