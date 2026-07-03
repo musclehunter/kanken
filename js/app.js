@@ -12,7 +12,7 @@ import { QuizSession } from './quiz.js';
 import { HandwritingCanvas } from './canvas.js';
 
 // Application version (bump on each release)
-export const APP_VERSION = '2.1.5';
+export const APP_VERSION = '2.1.6';
 
 class VIEWS_ROUTER {
     constructor() {
@@ -513,8 +513,17 @@ class VIEWS_ROUTER {
         const exContainer = document.getElementById('study-examples-container');
         const exList = document.getElementById('study-examples');
         if (k.examples && k.examples.length > 0) {
+            const seen = new Set();
+            const unique = k.examples.filter(ex => {
+                const normalized = ex.reading.replace(/[ァ-ン]/g, c => 
+                    String.fromCharCode(c.charCodeAt(0) - 0x60)
+                );
+                if (seen.has(normalized)) return false;
+                seen.add(normalized);
+                return true;
+            });
             exContainer.style.display = '';
-            exList.innerHTML = k.examples.map(ex =>
+            exList.innerHTML = unique.map(ex =>
                 `<span class="example-item font-japanese">${ex.word}（${ex.reading}）</span>`
             ).join('');
         } else {
