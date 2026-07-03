@@ -4,3 +4,4 @@ node_modules/
 .build-hash
 .build-version
 __check*.js
+runs.json
