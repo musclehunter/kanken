@@ -381,55 +381,60 @@
         </div>
 
         <div class="study-layout">
-          <!-- Left: Kanji info card -->
-          <div class="study-info-panel">
-            <div class="kanji-display font-serif" id="study-kanji">一</div>
-            <div class="kanji-details">
-              <div class="detail-row">
-                <span class="detail-label">画数:</span>
-                <span class="detail-value" id="study-strokes">1画</span>
-              </div>
-              <div class="detail-row">
-                <span class="detail-label">部首:</span>
-                <span class="detail-value font-japanese" id="study-radical">－</span>
-              </div>
-              <div class="detail-row">
-                <span class="detail-label">音読み:</span>
-                <span class="detail-value font-japanese" id="study-onyomi">イチ、イツ</span>
-              </div>
-              <div class="detail-row">
-                <span class="detail-label">訓読み:</span>
-                <span class="detail-value font-japanese" id="study-kunyomi">ひと-、ひと.つ</span>
+          <!-- Row 1: Kanji info (left) + Examples (right) -->
+          <div class="study-row">
+            <div class="study-info-panel">
+              <div class="kanji-display font-serif" id="study-kanji">一</div>
+              <div class="kanji-details">
+                <div class="detail-row">
+                  <span class="detail-label">画数:</span>
+                  <span class="detail-value" id="study-strokes">1画</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">部首:</span>
+                  <span class="detail-value font-japanese" id="study-radical">－</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">音読み:</span>
+                  <span class="detail-value font-japanese" id="study-onyomi">イチ、イツ</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">訓読み:</span>
+                  <span class="detail-value font-japanese" id="study-kunyomi">ひと-、ひと.つ</span>
+                </div>
               </div>
             </div>
 
-            <div class="stroke-order-helper block-container">
+            <div class="study-examples-panel">
+              <div class="study-examples block-container" id="study-examples-container" style="display:none">
+                <div class="block-header">用例（熟語）</div>
+                <div class="examples-list" id="study-examples"></div>
+              </div>
+              <div class="study-homophones block-container" id="study-homophones-container" style="display:none">
+                <div class="block-header">同音異字</div>
+                <div class="homophones-list" id="study-homophones"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 2: Stroke order (left half) + Practice canvas (right) -->
+          <div class="study-row">
+            <div class="study-stroke-panel">
               <div class="block-header">書き順</div>
               <div class="stroke-svg-container" id="stroke-svg-container">
                 <span class="placeholder-text">書き順データを読み込み中...</span>
               </div>
             </div>
 
-            <div class="study-examples block-container" id="study-examples-container" style="display:none">
-              <div class="block-header">用例（熟語）</div>
-              <div class="examples-list" id="study-examples"></div>
-            </div>
-
-            <div class="study-homophones block-container" id="study-homophones-container" style="display:none">
-              <div class="block-header">同音異字</div>
-              <div class="homophones-list" id="study-homophones"></div>
-            </div>
-          </div>
-
-          <!-- Right: Practice canvas -->
-          <div class="study-practice-panel">
-            <div class="block-header">書き練習</div>
-            <div class="canvas-wrapper study-canvas-wrapper">
-              <canvas id="study-practice-canvas" width="300" height="300"></canvas>
-              <div class="canvas-grid-lines"></div>
-            </div>
-            <div class="canvas-controls">
-              <button id="btn-study-canvas-clear" class="btn btn-outline btn-sm">クリア</button>
+            <div class="study-practice-panel">
+              <div class="block-header">書き練習</div>
+              <div class="canvas-wrapper study-canvas-wrapper">
+                <canvas id="study-practice-canvas" width="300" height="300"></canvas>
+                <div class="canvas-grid-lines"></div>
+              </div>
+              <div class="canvas-controls">
+                <button id="btn-study-canvas-clear" class="btn btn-outline btn-sm">クリア</button>
+              </div>
             </div>
           </div>
         </div>
