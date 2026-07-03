@@ -1197,16 +1197,3 @@ html {
 .study-nav-bar .btn {
   flex: 1;
 }
-
-@media (min-width: 768px) {
-  .study-layout {
-    flex-direction: row;
-    align-items: flex-start;
-  }
-  .study-info-panel {
-    flex: 1;
-  }
-  .study-practice-panel {
-    flex: 0 0 340px;
-  }
-}
