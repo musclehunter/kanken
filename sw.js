@@ -1,15 +1,15 @@
-const CACHE_NAME = 'kanji-master-v10';
+const CACHE_NAME = 'kanji-master-v12';
 const ASSETS = [
     './',
     './index.html',
     './css/style.css',
     './js/app.js',
-    './js/data.js',
     './js/data-manager.js',
     './js/canvas.js',
     './js/grader.js',
     './js/quiz.js',
     './js/storage.js',
+    './js/grades/kentei-10.json',
     './manifest.json'
 ];
 

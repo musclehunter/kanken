@@ -5,8 +5,6 @@
  * Supports on-demand loading of higher grades and offline capability.
  */
 
-import { initialKanjiData } from './data.js';
-
 const DB_NAME = 'KanjiMasterDB';
 const DB_VERSION = 1;
 
@@ -39,12 +37,6 @@ function getDB() {
 export const dataManager = {
     // Get Kanji list for a specific grade
     async getKanjiList(gradeId) {
-        if (gradeId === 10) {
-            // For Grade 10, we always have baseline data.js initial list
-            return initialKanjiData;
-        }
-
-        // Otherwise read from DB filtered by kentei_grade
         const db = await getDB();
         return new Promise((resolve, reject) => {
             const transaction = db.transaction('kanji', 'readonly');
@@ -60,25 +52,35 @@ export const dataManager = {
         });
     },
 
+    // Get word relations (antonyms, synonyms, same_kun) from cache or local file
+    async getWordRelations() {
+        const db = await getDB();
+        const cached = await new Promise((resolve) => {
+            const tx = db.transaction('kanji', 'readonly');
+            const store = tx.objectStore('kanji');
+            const req = store.get('__word_relations__');
+            req.onsuccess = () => resolve(req.result ? req.result.data : null);
+            req.onerror = () => resolve(null);
+        });
+        if (cached) return cached;
+
+        try {
+            const res = await fetch('./js/grades/word-relations.json');
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const data = await res.json();
+            const tx = db.transaction('kanji', 'readwrite');
+            tx.objectStore('kanji').put({ kanji: '__word_relations__', data });
+            return data;
+        } catch (e) {
+            console.error('Failed to load word-relations.json:', e);
+            return { antonyms: [], synonyms: [], same_kun: [] };
+        }
+    },
+
     // Download grade on-demand from local JSON files
     async downloadGrade(gradeId) {
         console.log(`Loading grade ${gradeId} from local assets...`);
-        let filename = '';
-
-        switch (gradeId) {
-            case 9: filename = 'grade-2.json'; break;
-            case 8: filename = 'grade-3.json'; break;
-            case 7: filename = 'grade-4.json'; break;
-            case 6: filename = 'grade-5.json'; break;
-            case 5: filename = 'grade-6.json'; break;
-            // 4級・3級・準2級 = 常用漢字全体 (小1〜6 + 中学)
-            case 4: case 3: case 2.5: filename = 'grade-joyo.json'; break;
-            // 2級 = 常用漢字 + 人名用漢字
-            case 2: filename = 'grade-2kyu.json'; break;
-            // 準1級・1級 = 常用 + 人名用 + JIS第1・第2水準
-            case 1.5: case 1: filename = 'grade-pre1.json'; break;
-            default: throw new Error(`Invalid grade: ${gradeId}`);
-        }
+        const filename = `kentei-${gradeId}.json`;
 
         try {
             const res = await fetch(`./js/grades/${filename}`);
@@ -89,9 +91,7 @@ export const dataManager = {
             const tx = db.transaction('kanji', 'readwrite');
             const store = tx.objectStore('kanji');
 
-            // Store all kanji items in IndexedDB with local kentei_grade pointer
             for (const item of list) {
-                item.kentei_grade = gradeId;
                 store.put(item);
             }
 

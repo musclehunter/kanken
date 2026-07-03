@@ -11,7 +11,7 @@ import { dataManager } from './data-manager.js';
 import { QuizSession } from './quiz.js';
 
 // Application version (bump on each release)
-export const APP_VERSION = '1.0.0';
+export const APP_VERSION = '2.0.0';
 
 class VIEWS_ROUTER {
     constructor() {
@@ -29,18 +29,18 @@ class VIEWS_ROUTER {
         this.setupViewRouting();
         this.setupUIHandlers();
 
-        // Display app version
         const versionEl = document.getElementById('app-version');
         if (versionEl) versionEl.innerText = `v${APP_VERSION}`;
 
-        // Check recognition engine availability
         const engineText = await graderEngineStatus();
         document.getElementById('current-recognition-engine-status').innerText = engineText;
 
-        // Load initial grade data (10級)
-        this.kanjiData = await dataManager.getKanjiList(1);
+        this.kanjiData = await dataManager.getKanjiList(10);
+        if (this.kanjiData.length === 0) {
+            await dataManager.downloadGrade(10);
+            this.kanjiData = await dataManager.getKanjiList(10);
+        }
 
-        // Load default view based on hash or default to home
         this.handleRoute(window.location.hash);
     }
 
@@ -81,9 +81,15 @@ class VIEWS_ROUTER {
                 this.renderHomeScreen();
                 break;
 
+            case 'mode-select':
+                targetViewId = 'view-mode-select';
+                navActiveId = 'nav-home';
+                this.renderModeSelectScreen();
+                break;
+
             case 'study':
                 targetViewId = 'view-study';
-                navActiveId = 'nav-home';
+                navActiveId = 'nav-study';
                 this.renderStudyScreen();
                 break;
 
@@ -137,27 +143,22 @@ class VIEWS_ROUTER {
 
     // --- UI BINDINGS ---
     setupUIHandlers() {
-        // Header settings button click
         document.getElementById('btn-settings').onclick = () => {
             window.location.hash = 'settings';
         };
 
-        // Generic Back buttons click triggers browser history back
         document.querySelectorAll('.btn-back').forEach(btn => {
             btn.onclick = () => {
                 window.history.back();
             };
         });
 
-        // --- HOME SCREEN CLICK HANDLERS ---
-        // Start 10級 button
         document.querySelector('.start-grade-btn').onclick = () => {
             this.currentGrade = 10;
             this.studyIndex = 0;
-            window.location.hash = 'study';
+            window.location.hash = 'mode-select';
         };
 
-        // Locked grade download trigger simulation
         document.querySelectorAll('.download-grade-btn').forEach(btn => {
             btn.onclick = async (e) => {
                 const card = e.target.closest('.grade-card');
@@ -167,20 +168,11 @@ class VIEWS_ROUTER {
                 btn.disabled = true;
 
                 try {
-                    // Map kentei grade to API/data grade
-                    const gradeToAPI = {
-                        10: 1, 9: 2, 8: 3, 7: 4, 6: 5, 5: 6,
-                        4: 4, 3: 3, 2.5: 2.5, 2: 2,
-                        1.5: 1.5, 1: 1
-                    };
-                    const targetAPIGrade = gradeToAPI[gradeVal];
-                    await dataManager.downloadGrade(targetAPIGrade);
+                    await dataManager.downloadGrade(gradeVal);
 
-                    // Mark as unlocked
                     this.unlockedGrades.push(gradeVal);
                     storage.setJson('unlocked_grades', this.unlockedGrades);
 
-                    // Force layout refresh
                     this.renderHomeScreen();
                 } catch (err) {
                     alert('データの取得に失敗しました。インターネット接続を確認して再度お試しください。');
@@ -190,25 +182,34 @@ class VIEWS_ROUTER {
             };
         });
 
-        // --- FLASHCARD NAVIGATION CLICK HANDLERS ---
+        document.querySelectorAll('.start-mode-btn').forEach(btn => {
+            btn.onclick = async (e) => {
+                const mode = e.target.closest('.mode-card').dataset.mode;
+                this.kanjiData = await dataManager.getKanjiList(this.currentGrade);
+                if (mode === 'study') {
+                    this.studyIndex = 0;
+                    this.kanjiData = storage.getWeightedKanjiOrder(this.kanjiData);
+                    window.location.hash = 'study';
+                } else if (mode === 'test') {
+                    window.location.hash = 'quiz-select';
+                }
+            };
+        });
+
         document.getElementById('btn-study-prev').onclick = () => this.navigateStudyCard(-1);
         document.getElementById('btn-study-next').onclick = () => this.navigateStudyCard(1);
 
-        // Test this specific character click inside Card study view
         document.getElementById('btn-study-test').onclick = () => {
             const currentKanjiItem = this.kanjiData[this.studyIndex];
-            // Create single question session targeting this character
             this.activeQuiz = new QuizSession(this.currentGrade, 'writing', [currentKanjiItem], this);
-            this.activeQuiz.questions = [currentKanjiItem]; // Ensure it is exactly this one
+            this.activeQuiz.questions = [currentKanjiItem];
             window.location.hash = 'quiz-writing';
         };
 
-        // --- QUIZ SELECTION MODE CLICK HANDLERS ---
         document.querySelectorAll('.mode-card .start-quiz-btn').forEach(btn => {
             btn.onclick = (e) => {
                 const mode = e.target.closest('.mode-card').dataset.mode;
 
-                // Start quiz orchestration
                 this.activeQuiz = new QuizSession(
                     this.currentGrade,
                     mode,
@@ -224,7 +225,6 @@ class VIEWS_ROUTER {
             };
         });
 
-        // Exit quiz buttons
         const exitQuiz = () => {
             if (confirm('テストを途中で終了しますか？これまでの回答は保存されません。')) {
                 this.activeQuiz = null;
@@ -244,15 +244,13 @@ class VIEWS_ROUTER {
         }
     }
 
-    // --- RENDER DOM: HOME SCREEN ---
-    renderHomeScreen() {
-        // Progress calculation Grade 10
-        const progress = storage.getGradeProgress(this.kanjiData);
-        const gr10Card = document.querySelector('.grade-card[data-grade="10"]');
-        gr10Card.querySelector('.progress-fill').style.width = `${progress.percentage}%`;
-        gr10Card.querySelector('.progress-text').innerText = `学んだ漢字: ${progress.studied}/${progress.total} (${progress.percentage}%)`;
+    renderModeSelectScreen() {
+        const gradeLabels = { 2.5: '準2級', 1.5: '準1級' };
+        const label = gradeLabels[this.currentGrade] || `${this.currentGrade}級`;
+        document.getElementById('mode-select-title').innerText = `${label} - モード選択`;
+    }
 
-        // Names & counts mapping for all grades
+    renderHomeScreen() {
         const gradeNames = {
             10: '小学1年生レベル',
             9: '小学2年生レベル',
@@ -268,25 +266,19 @@ class VIEWS_ROUTER {
             1: '常用+人名用+JIS水準レベル'
         };
         const gradeCounts = {
-            10: '80',
-            9: '240',
-            8: '440',
-            7: '642',
-            6: '835',
-            5: '1,026',
-            4: '2,060',
-            3: '2,060',
-            2.5: '2,060',
-            2: '2,923',
-            1.5: '5,923',
-            1: '5,923'
+            10: '80', 9: '240', 8: '440', 7: '642',
+            6: '835', 5: '1,026', 4: '1,339', 3: '1,623',
+            2.5: '1,951', 2: '2,136', 1.5: '約3,000', 1: '約6,000'
         };
-        const gradeLabels = {
-            2.5: '準2級',
-            1.5: '準1級'
-        };
+        const gradeLabels = { 2.5: '準2級', 1.5: '準1級' };
 
-        // Render unlocked card status modifications
+        const progress = storage.getGradeProgress(this.kanjiData);
+        const gr10Card = document.querySelector('.grade-card[data-grade="10"]');
+        if (gr10Card) {
+            gr10Card.querySelector('.progress-fill').style.width = `${progress.percentage}%`;
+            gr10Card.querySelector('.progress-text').innerText = `学んだ漢字: ${progress.studied}/${progress.total} (${progress.percentage}%)`;
+        }
+
         this.unlockedGrades = this.getUnlockedGradesList();
         this.unlockedGrades.forEach(g => {
             const card = document.querySelector(`.grade-card[data-grade="${g}"]`);
@@ -307,79 +299,78 @@ class VIEWS_ROUTER {
           <button class="btn btn-primary start-grade-btn">始める</button>
         `;
 
-                // Dynamically compute progress for newly unlocked higher grades
-                const gradeToAPI2 = {
-                    10: 1, 9: 2, 8: 3, 7: 4, 6: 5, 5: 6,
-                    4: 4, 3: 3, 2.5: 2.5, 2: 2,
-                    1.5: 1.5, 1: 1
-                };
-                const targetAPIGrade = gradeToAPI2[g];
-                dataManager.getKanjiList(targetAPIGrade).then(list => {
+                dataManager.getKanjiList(g).then(list => {
                     const prog = storage.getGradeProgress(list);
                     const block = document.getElementById(`progress-${g}`);
-                    block.querySelector('.progress-fill').style.width = `${prog.percentage}%`;
-                    block.querySelector('.progress-text').innerText = `学んだ漢字: ${prog.studied}/${prog.total} (${prog.percentage}%)`;
+                    if (block) {
+                        block.querySelector('.progress-fill').style.width = `${prog.percentage}%`;
+                        block.querySelector('.progress-text').innerText = `学んだ漢字: ${prog.studied}/${prog.total} (${prog.percentage}%)`;
+                    }
                 });
 
-                // Set action binding
                 card.querySelector('.start-grade-btn').onclick = async () => {
                     this.currentGrade = g;
                     this.studyIndex = 0;
-                    const gradeToAPI3 = {
-                        10: 1, 9: 2, 8: 3, 7: 4, 6: 5, 5: 6,
-                        4: 4, 3: 3, 2.5: 2.5, 2: 2,
-                        1.5: 1.5, 1: 1
-                    };
-                    const targetAPIGrade = gradeToAPI3[g];
-                    this.kanjiData = await dataManager.getKanjiList(targetAPIGrade);
-                    window.location.hash = 'study';
+                    this.kanjiData = await dataManager.getKanjiList(g);
+                    window.location.hash = 'mode-select';
                 };
             }
         });
     }
 
-    // --- RENDER DOM: STUDY FLASHCARDS ---
     async renderStudyScreen() {
         if (this.kanjiData.length === 0) return;
 
-        // Boundaries checks
         if (this.studyIndex < 0) this.studyIndex = 0;
         if (this.studyIndex >= this.kanjiData.length) this.studyIndex = this.kanjiData.length - 1;
 
         const k = this.kanjiData[this.studyIndex];
+        const gradeLabels = { 2.5: '準2級', 1.5: '準1級' };
+        const label = gradeLabels[this.currentGrade] || `${this.currentGrade}級`;
 
+        document.getElementById('study-title').innerText = `漢字学習 (${label})`;
         document.getElementById('study-progress').innerText = `${this.studyIndex + 1} / ${this.kanjiData.length}`;
         document.getElementById('study-kanji').innerText = k.kanji;
         document.getElementById('study-strokes').innerText = `${k.stroke_count}画`;
+        document.getElementById('study-radical').innerText = k.radical_name ? `${k.radical}（${k.radical_name}）` : 'なし';
         document.getElementById('study-onyomi').innerText = k.on_readings.join('、') || 'なし';
         document.getElementById('study-kunyomi').innerText = k.kun_readings.join('、') || 'なし';
 
-        // Fetch and render KanjiVG Stroke Animations helper
+        const exContainer = document.getElementById('study-examples-container');
+        const exList = document.getElementById('study-examples');
+        if (k.examples && k.examples.length > 0) {
+            exContainer.style.display = '';
+            exList.innerHTML = k.examples.map(ex =>
+                `<span class="example-item font-japanese">${ex.word}（${ex.reading}）</span>`
+            ).join('');
+        } else {
+            exContainer.style.display = 'none';
+        }
+
+        const homoContainer = document.getElementById('study-homophones-container');
+        const homoList = document.getElementById('study-homophones');
+        if (k.homophones && k.homophones.length > 0) {
+            homoContainer.style.display = '';
+            homoList.innerHTML = k.homophones.map(h =>
+                `<span class="homophone-item font-serif">${h}</span>`
+            ).join('');
+        } else {
+            homoContainer.style.display = 'none';
+        }
+
         const svgContainer = document.getElementById('stroke-svg-container');
         svgContainer.innerHTML = '<span class="placeholder-text">書き順読み込み中...</span>';
 
         const svgText = await dataManager.getKanjiSVG(k.kanji);
         if (svgText) {
-            // Clear container and output SVG directly
             svgContainer.innerHTML = svgText;
-
             const svgElement = svgContainer.querySelector('svg');
             if (svgElement) {
-                // Enforce aspect containment ratios
                 svgElement.setAttribute('width', '100%');
                 svgElement.setAttribute('height', '100%');
-
-                // Find paths inside SVG and configure stroke drawing animation
-                const paths = svgElement.querySelectorAll('path');
-                paths.forEach((path, index) => {
-                    const length = path.getTotalLength();
-                    path.setAttribute('class', 'stroke-anim');
-                    path.style.strokeDasharray = length;
-                    path.style.strokeDashoffset = length;
-                    // Trigger delays sequentially
-                    path.style.animation = `drawStroke 1s cubic-bezier(0.4, 0, 0.2, 1) forwards`;
-                    path.style.animationDelay = `${index * 0.9}s`;
-                });
+                this.playStrokeAnimation(svgElement);
+                svgContainer.style.cursor = 'pointer';
+                svgContainer.onclick = () => this.playStrokeAnimation(svgElement);
             }
         } else {
             svgContainer.innerHTML = '<span class="placeholder-text">書き順データなし</span>';
@@ -389,6 +380,24 @@ class VIEWS_ROUTER {
     navigateStudyCard(direction) {
         this.studyIndex += direction;
         this.renderStudyScreen();
+    }
+
+    playStrokeAnimation(svgElement) {
+        const paths = svgElement.querySelectorAll('path');
+        paths.forEach((path) => {
+            path.setAttribute('class', 'stroke-anim');
+            path.style.animation = 'none';
+            path.style.strokeDasharray = 'none';
+            void path.offsetWidth;
+            const length = path.getTotalLength();
+            path.style.strokeDasharray = length;
+            path.style.strokeDashoffset = length;
+            void path.offsetWidth;
+            path.style.animation = `drawStroke 1s cubic-bezier(0.4, 0, 0.2, 1) forwards`;
+        });
+        paths.forEach((path, index) => {
+            path.style.animationDelay = `${index * 0.9}s`;
+        });
     }
 
     // --- RENDER DOM: SETTINGS ---
@@ -401,13 +410,12 @@ class VIEWS_ROUTER {
             storage.saveSetting('grader-mode', e.target.value);
         };
 
-        // Sync button trigger check
         document.getElementById('btn-sync-data').onclick = async (e) => {
             const btn = e.target;
             btn.innerText = '同期中...';
             btn.disabled = true;
 
-            let success = await dataManager.syncGrade(1); // Sync grade 1 lists
+            let success = await dataManager.syncGrade(this.currentGrade);
 
             if (success) {
                 alert('同期に成功しました！最新のデータを読み込みました。');

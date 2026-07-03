@@ -19,8 +19,14 @@ export const storage = {
                 reading_correct: 0,
                 writing_attempts: 0,
                 writing_correct: 0,
-                strokes_attempts: 0,
-                strokes_correct: 0,
+                radical_attempts: 0,
+                radical_correct: 0,
+                antonym_attempts: 0,
+                antonym_correct: 0,
+                homophone_attempts: 0,
+                homophone_correct: 0,
+                same_kun_attempts: 0,
+                same_kun_correct: 0,
                 last_attempt: null
             };
         }
@@ -50,13 +56,16 @@ export const storage = {
     getWrongKanjiList(gradeKanjiList) {
         const history = this.getHistory();
         const wrongList = [];
+        const types = ['reading', 'writing', 'radical', 'antonym', 'homophone', 'same_kun'];
 
         gradeKanjiList.forEach(item => {
             const record = history[item.kanji];
             if (record) {
-                // Calculate failure rate
-                const totalAttempts = record.reading_attempts + record.writing_attempts + record.strokes_attempts;
-                const totalCorrect = record.reading_correct + record.writing_correct + record.strokes_correct;
+                let totalAttempts = 0, totalCorrect = 0;
+                for (const t of types) {
+                    totalAttempts += record[`${t}_attempts`] || 0;
+                    totalCorrect += record[`${t}_correct`] || 0;
+                }
 
                 if (totalAttempts > 0) {
                     const successRate = totalCorrect / totalAttempts;
@@ -78,11 +87,13 @@ export const storage = {
     getGradeProgress(gradeKanjiList) {
         const history = this.getHistory();
         let totalStudied = 0;
+        const types = ['reading', 'writing', 'radical', 'antonym', 'homophone', 'same_kun'];
 
         gradeKanjiList.forEach(item => {
             const record = history[item.kanji];
-            if (record && (record.reading_attempts > 0 || record.writing_attempts > 0 || record.strokes_attempts > 0)) {
-                totalStudied++;
+            if (record) {
+                const hasAttempts = types.some(t => (record[`${t}_attempts`] || 0) > 0);
+                if (hasAttempts) totalStudied++;
             }
         });
 
@@ -91,6 +102,35 @@ export const storage = {
             total: gradeKanjiList.length,
             percentage: gradeKanjiList.length > 0 ? Math.round((totalStudied / gradeKanjiList.length) * 100) : 0
         };
+    },
+
+    // Get weight for a kanji based on learning history
+    // Higher weight = should be studied first (more mistakes)
+    getKanjiWeight(kanji) {
+        const record = this.getHistory(kanji);
+        if (!record) return 1.0;
+
+        const types = ['reading', 'writing', 'radical', 'antonym', 'homophone', 'same_kun'];
+        let totalAttempts = 0, totalCorrect = 0;
+        for (const t of types) {
+            totalAttempts += record[`${t}_attempts`] || 0;
+            totalCorrect += record[`${t}_correct`] || 0;
+        }
+
+        if (totalAttempts === 0) return 1.0;
+
+        const successRate = totalCorrect / totalAttempts;
+        // Weight = 2.0 - successRate (range: 0.0→2.0, 1.0→1.0, 0.5→1.5)
+        // More mistakes → higher weight → studied first
+        const weight = 2.0 - successRate;
+        return Math.max(0.1, Math.min(2.0, weight));
+    },
+
+    // Get sorted kanji list by weight (for study mode ordering)
+    getWeightedKanjiOrder(gradeKanjiList) {
+        return gradeKanjiList
+            .map(item => ({ ...item, _weight: this.getKanjiWeight(item.kanji) }))
+            .sort((a, b) => b._weight - a._weight);
     },
 
     // Save Settings

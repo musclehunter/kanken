@@ -524,9 +524,6 @@ html {
 /* Animation pathway */
 .stroke-svg-container svg path.stroke-anim {
   stroke: var(--accent-primary);
-  stroke-dasharray: 400;
-  stroke-dashoffset: 400;
-  animation: drawStroke 2s ease-in-out infinite;
 }
 @keyframes drawStroke {
   to {
@@ -1012,4 +1009,40 @@ html {
   font-size: 13px;
   outline: none;
   cursor: pointer;
+}
+
+/* Study mode: examples & homophones */
+.study-examples, .study-homophones {
+  margin-top: 12px;
+}
+.examples-list, .homophones-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 0;
+}
+.example-item {
+  background: var(--bg-surface);
+  border: 1px solid var(--glass-border);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+}
+.homophone-item {
+  background: var(--bg-surface);
+  border: 1px solid var(--glass-border);
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 24px;
+  line-height: 1.2;
+}
+
+/* Mode icon color variants */
+.bg-red { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+.bg-orange { background: rgba(249, 115, 22, 0.15); color: #f97316; }
+.bg-teal { background: rgba(20, 184, 166, 0.15); color: #14b8a6; }
+
+/* 4-item nav */
+.app-nav .nav-item {
+  flex: 1;
 }
