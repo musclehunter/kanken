@@ -12,7 +12,7 @@ import { QuizSession } from './quiz.js';
 import { HandwritingCanvas } from './canvas.js';
 
 // Application version (bump on each release)
-export const APP_VERSION = '2.1.7';
+export const APP_VERSION = '2.1.8';
 
 class VIEWS_ROUTER {
     constructor() {
@@ -118,6 +118,12 @@ class VIEWS_ROUTER {
                 this.renderStudyScreen();
                 break;
 
+            case 'kanji-list':
+                targetViewId = 'view-kanji-list';
+                navActiveId = 'nav-study';
+                this.renderKanjiListScreen();
+                break;
+
             case 'quiz-select':
                 targetViewId = 'view-quiz-select';
                 navActiveId = 'nav-quiz';
@@ -208,33 +214,28 @@ class VIEWS_ROUTER {
             };
         });
 
-        document.querySelector('.start-grade-btn').onclick = () => {
-            this.currentGrade = 10;
-            this.studyIndex = 0;
-            storage.saveSetting('current_grade', this.currentGrade);
-            window.location.hash = 'mode-select';
-        };
-
-        document.querySelectorAll('.download-grade-btn').forEach(btn => {
+        document.querySelectorAll('.start-grade-btn').forEach(btn => {
             btn.onclick = async (e) => {
                 const card = e.target.closest('.grade-card');
                 const gradeVal = parseFloat(card.dataset.grade);
-
-                btn.textContent = '取得中...';
+                btn.textContent = '読み込み中...';
                 btn.disabled = true;
-
-                try {
-                    await dataManager.downloadGrade(gradeVal);
-
-                    this.unlockedGrades.push(gradeVal);
-                    storage.setJson('unlocked_grades', this.unlockedGrades);
-
-                    this.renderHomeScreen();
-                } catch (err) {
-                    alert('データの取得に失敗しました。インターネット接続を確認して再度お試しください。');
-                    btn.textContent = '開放する';
-                    btn.disabled = false;
+                this.currentGrade = gradeVal;
+                this.studyIndex = 0;
+                storage.saveSetting('current_grade', gradeVal);
+                this.kanjiData = await dataManager.getKanjiList(gradeVal);
+                if (this.kanjiData.length === 0) {
+                    try {
+                        await dataManager.downloadGrade(gradeVal);
+                        this.kanjiData = await dataManager.getKanjiList(gradeVal);
+                    } catch (err) {
+                        alert('データの取得に失敗しました。インターネット接続を確認して再度お試しください。');
+                        btn.textContent = '始める';
+                        btn.disabled = false;
+                        return;
+                    }
                 }
+                window.location.hash = 'mode-select';
             };
         });
 
@@ -247,6 +248,8 @@ class VIEWS_ROUTER {
                     window.location.hash = 'study-order';
                 } else if (mode === 'test') {
                     window.location.hash = 'quiz-select';
+                } else if (mode === 'kanji-list') {
+                    window.location.hash = 'kanji-list';
                 }
             };
         });
@@ -268,8 +271,7 @@ class VIEWS_ROUTER {
         document.getElementById('btn-study-mark').onclick = () => {
             const k = this.kanjiData[this.studyIndex];
             if (!k) return;
-            const isStudied = storage.isStudied(k.kanji);
-            if (isStudied) {
+            if (storage.isStudied(k.kanji)) {
                 storage.unmarkStudied(k.kanji);
             } else {
                 storage.markStudied(k.kanji);
@@ -291,19 +293,97 @@ class VIEWS_ROUTER {
         document.querySelectorAll('.mode-card .start-quiz-btn').forEach(btn => {
             btn.onclick = (e) => {
                 const mode = e.target.closest('.mode-card').dataset.mode;
+                this.showQuizConfigPanel(mode);
+            };
+        });
+
+        // Quiz config panel handlers
+        const configPanel = document.getElementById('quiz-config-panel');
+        const configClose = document.getElementById('quiz-config-close');
+        const configStart = document.getElementById('quiz-config-start');
+
+        if (configClose) {
+            configClose.onclick = () => {
+                configPanel.style.display = 'none';
+            };
+        }
+
+        if (configStart) {
+            configStart.onclick = () => {
+                const mode = configPanel.dataset.mode;
+                const count = parseInt(configPanel.dataset.selectedCount || '20', 10);
+                const method = configPanel.dataset.selectedMethod || 'random';
+                const timeAttack = configPanel.dataset.ta === 'on';
+                const timeLimit = parseInt(configPanel.dataset.taTime || '15', 10);
+
+                const config = { count, method, timeAttack, timeLimit };
+                storage.saveQuizConfig(this.currentGrade, mode, config);
 
                 this.activeQuiz = new QuizSession(
                     this.currentGrade,
                     mode,
                     this.kanjiData,
-                    this
+                    this,
+                    config
                 );
+
+                configPanel.style.display = 'none';
 
                 if (mode === 'writing') {
                     window.location.hash = 'quiz-writing';
                 } else {
                     window.location.hash = 'quiz-active';
                 }
+            };
+        }
+
+        // Config option button handlers (count)
+        document.querySelectorAll('#quiz-config-count .config-option-btn').forEach(btn => {
+            btn.onclick = () => {
+                document.querySelectorAll('#quiz-config-count .config-option-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                configPanel.dataset.selectedCount = btn.dataset.count;
+            };
+        });
+
+        // Config option button handlers (method)
+        document.querySelectorAll('#quiz-config-method .config-option-btn').forEach(btn => {
+            btn.onclick = () => {
+                document.querySelectorAll('#quiz-config-method .config-option-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                configPanel.dataset.selectedMethod = btn.dataset.method;
+
+                // Show sequential progress info
+                const seqInfo = document.getElementById('quiz-config-sequential-info');
+                const seqPos = document.getElementById('quiz-config-seq-pos');
+                if (btn.dataset.method === 'sequential') {
+                    const pos = storage.getSequentialPosition(this.currentGrade, configPanel.dataset.mode);
+                    seqPos.innerText = `進捗: ${pos} / ${this.kanjiData.length}`;
+                    seqInfo.style.display = 'block';
+                } else {
+                    seqInfo.style.display = 'none';
+                }
+            };
+        });
+
+        // Time attack toggle handlers
+        document.querySelectorAll('.quiz-config-section .config-option-btn[data-ta]').forEach(btn => {
+            btn.onclick = () => {
+                document.querySelectorAll('.quiz-config-section .config-option-btn[data-ta]').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                configPanel.dataset.ta = btn.dataset.ta;
+
+                const taTimeSection = document.getElementById('quiz-config-ta-time');
+                taTimeSection.style.display = btn.dataset.ta === 'on' ? 'flex' : 'none';
+            };
+        });
+
+        // Time limit selection handlers
+        document.querySelectorAll('#quiz-config-ta-options .config-option-btn').forEach(btn => {
+            btn.onclick = () => {
+                document.querySelectorAll('#quiz-config-ta-options .config-option-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                configPanel.dataset.taTime = btn.dataset.time;
             };
         });
     }
@@ -315,6 +395,92 @@ class VIEWS_ROUTER {
             this.studyIndex = idx;
             window.location.hash = 'study';
         }
+    }
+
+    showQuizConfigPanel(mode) {
+        const panel = document.getElementById('quiz-config-panel');
+        const titleEl = document.getElementById('quiz-config-title');
+        const statsEl = document.getElementById('quiz-config-stats');
+
+        // Insert panel right after the clicked mode card
+        const clickedCard = document.querySelector(`.mode-card[data-mode="${mode}"]`);
+        if (clickedCard && clickedCard.nextElementSibling !== panel) {
+            clickedCard.insertAdjacentElement('afterend', panel);
+        }
+
+        const modeTitles = {
+            reading: '読み', writing: '書き取り', radical: '部首',
+            antonym: '対義語', homophone: '同音異字', same_kun: '同訓異字'
+        };
+        titleEl.innerText = `${modeTitles[mode] || mode} - 出題設定`;
+        panel.dataset.mode = mode;
+
+        // Load saved config
+        const savedConfig = storage.getQuizConfig(this.currentGrade, mode);
+        panel.dataset.selectedCount = String(savedConfig.count);
+        panel.dataset.selectedMethod = savedConfig.method;
+        panel.dataset.ta = savedConfig.timeAttack ? 'on' : 'off';
+        panel.dataset.taTime = String(savedConfig.timeLimit || 15);
+
+        // Highlight saved selections
+        document.querySelectorAll('#quiz-config-count .config-option-btn').forEach(btn => {
+            btn.classList.toggle('active', parseInt(btn.dataset.count, 10) === savedConfig.count);
+        });
+        document.querySelectorAll('#quiz-config-method .config-option-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.method === savedConfig.method);
+        });
+
+        // Time attack toggle state
+        document.querySelectorAll('.quiz-config-section .config-option-btn[data-ta]').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.ta === (savedConfig.timeAttack ? 'on' : 'off'));
+        });
+        const taTimeSection = document.getElementById('quiz-config-ta-time');
+        taTimeSection.style.display = savedConfig.timeAttack ? 'flex' : 'none';
+        document.querySelectorAll('#quiz-config-ta-options .config-option-btn').forEach(btn => {
+            btn.classList.toggle('active', parseInt(btn.dataset.time, 10) === (savedConfig.timeLimit || 15));
+        });
+
+        // Show sequential progress if applicable
+        const seqInfo = document.getElementById('quiz-config-sequential-info');
+        const seqPos = document.getElementById('quiz-config-seq-pos');
+        if (savedConfig.method === 'sequential') {
+            const pos = storage.getSequentialPosition(this.currentGrade, mode);
+            seqPos.innerText = `進捗: ${pos} / ${this.kanjiData.length}`;
+            seqInfo.style.display = 'block';
+        } else {
+            seqInfo.style.display = 'none';
+        }
+
+        // Show stats
+        const stats = storage.getTypeStats(this.currentGrade, mode, this.kanjiData);
+        const unasked = storage.getUnaskedKanji(mode, this.kanjiData).length;
+        const studied = storage.getStudiedKanji(this.kanjiData).length;
+        const wrong = storage.getWrongKanjiForMode(mode, this.kanjiData).length;
+
+        statsEl.innerHTML = `
+            <div class="quiz-config-stat-item">
+                <span class="stat-label">正答率</span>
+                <span class="stat-value">${stats.accuracy}%</span>
+            </div>
+            <div class="quiz-config-stat-item">
+                <span class="stat-label">出題済</span>
+                <span class="stat-value">${stats.uniqueKanji}/${stats.totalKanji}</span>
+            </div>
+            <div class="quiz-config-stat-item">
+                <span class="stat-label">未出題</span>
+                <span class="stat-value">${unasked}</span>
+            </div>
+            <div class="quiz-config-stat-item">
+                <span class="stat-label">学習済</span>
+                <span class="stat-value">${studied}</span>
+            </div>
+            <div class="quiz-config-stat-item">
+                <span class="stat-label">要復習</span>
+                <span class="stat-value">${wrong}</span>
+            </div>
+        `;
+
+        panel.style.display = 'block';
     }
 
     renderModeSelectScreen() {
@@ -370,16 +536,25 @@ class VIEWS_ROUTER {
 
     updateMarkButton(kanji) {
         const btn = document.getElementById('btn-study-mark');
+        const badge = document.getElementById('study-status-badge');
         if (!btn) return;
         const isStudied = storage.isStudied(kanji);
         if (isStudied) {
-            btn.innerText = '覚えた ✓';
+            btn.innerText = '覚え直す';
             btn.classList.remove('btn-success');
             btn.classList.add('btn-outline');
+            if (badge) {
+                badge.innerText = '学習済み';
+                badge.className = 'study-status-badge studied';
+            }
         } else {
             btn.innerText = '覚えた';
             btn.classList.remove('btn-outline');
             btn.classList.add('btn-success');
+            if (badge) {
+                badge.innerText = '未学習';
+                badge.className = 'study-status-badge unstudied';
+            }
         }
     }
 
@@ -432,50 +607,32 @@ class VIEWS_ROUTER {
             if (progText) progText.innerText = `学んだ漢字: ${progress.studied}/${progress.total} (${progress.percentage}%)`;
         }
 
-        this.unlockedGrades = this.getUnlockedGradesList();
-        const gradeNewCounts = {
-            10: '80', 9: '160', 8: '200', 7: '202',
-            6: '193', 5: '191', 4: '313', 3: '284',
-            2.5: '328', 2: '185', 1.5: '約864', 1: '約3,000'
-        };
-        const gradeLowerCounts = {
-            10: '', 9: ' + 下位 80字', 8: ' + 下位 240字', 7: ' + 下位 440字',
-            6: ' + 下位 642字', 5: ' + 下位 835字', 4: ' + 下位 1,026字', 3: ' + 下位 1,339字',
-            2.5: ' + 下位 1,623字', 2: ' + 下位 1,951字', 1.5: ' + 下位 2,136字', 1: ' + 下位 約3,000字'
-        };
-        this.unlockedGrades.forEach(g => {
+        const allGrades = [10, 9, 8, 7, 6, 5, 4, 3, 2.5, 2, 1.5, 1];
+        allGrades.forEach(g => {
             const card = document.querySelector(`.grade-card[data-grade="${g}"]`);
-            if (card && card.classList.contains('locked')) {
-                card.classList.remove('locked');
-                card.innerHTML = `
-          <div class="grade-info">
-            <h3>${gradeLabels[g] || g + '級'}</h3>
-            <p class="grade-level">${gradeNames[g] || '小学校レベル'}</p>
-            <p class="grade-char-count">配当漢字 ${gradeNewCounts[g] || '0'}字${gradeLowerCounts[g] || ''}</p>
-          </div>
-          <div class="grade-progress-container" id="progress-${g}">
-            <div class="progress-bar">
-              <div class="progress-fill" style="width: 0%"></div>
-            </div>
-            <span class="progress-text">学んだ漢字: 0/0 (0%)</span>
-          </div>
-          <button class="btn btn-primary start-grade-btn">始める</button>
-        `;
-
+            if (card) {
                 dataManager.getKanjiList(g).then(list => {
                     const prog = storage.getGradeProgress(list);
-                    const block = document.getElementById(`progress-${g}`);
-                    if (block) {
-                        block.querySelector('.progress-fill').style.width = `${prog.percentage}%`;
-                        block.querySelector('.progress-text').innerText = `学んだ漢字: ${prog.studied}/${prog.total} (${prog.percentage}%)`;
-                    }
-                });
+                    const progFill = card.querySelector('.progress-fill');
+                    const progText = card.querySelector('.progress-text');
+                    if (progFill) progFill.style.width = `${prog.percentage}%`;
+                    if (progText) progText.innerText = `学んだ漢字: ${prog.studied}/${prog.total} (${prog.percentage}%)`;
+                }).catch(() => {});
 
                 card.querySelector('.start-grade-btn').onclick = async () => {
                     this.currentGrade = g;
                     this.studyIndex = 0;
                     storage.saveSetting('current_grade', g);
                     this.kanjiData = await dataManager.getKanjiList(g);
+                    if (this.kanjiData.length === 0) {
+                        try {
+                            await dataManager.downloadGrade(g);
+                            this.kanjiData = await dataManager.getKanjiList(g);
+                        } catch (err) {
+                            alert('データの取得に失敗しました。インターネット接続を確認して再度お試しください。');
+                            return;
+                        }
+                    }
                     window.location.hash = 'mode-select';
                 };
             }
@@ -647,6 +804,163 @@ class VIEWS_ROUTER {
                 btn.disabled = false;
             }
         };
+    }
+
+    // --- KANJI LIST SCREEN ---
+    renderKanjiListScreen() {
+        const gradeLabels = { 2.5: '準2級', 1.5: '準1級' };
+        const label = gradeLabels[this.currentGrade] || `${this.currentGrade}級`;
+        document.getElementById('kanji-list-title').innerText = `${label} - 漢字リスト`;
+
+        this.kanjiListSelected = new Set();
+
+        // Populate radical filter
+        const radicalSelect = document.getElementById('filter-radical');
+        const radicals = [...new Set(this.kanjiData.map(k => k.radical_name).filter(Boolean))].sort();
+        radicalSelect.innerHTML = '<option value="all">部首: すべて</option>' +
+            radicals.map(r => `<option value="${r}">${r}</option>`).join('');
+
+        // Populate stroke count filters
+        const strokesMin = document.getElementById('filter-strokes-min');
+        const strokesMax = document.getElementById('filter-strokes-max');
+        const strokeCounts = [...new Set(this.kanjiData.map(k => k.stroke_count))].sort((a, b) => a - b);
+        strokesMin.innerHTML = '<option value="0">画数: 下限なし</option>' +
+            strokeCounts.map(s => `<option value="${s}">${s}画以上</option>`).join('');
+        strokesMax.innerHTML = '<option value="99">画数: 上限なし</option>' +
+            strokeCounts.map(s => `<option value="${s}">${s}画以下</option>`).join('');
+
+        this.updateKanjiGrid();
+
+        // Filter event listeners
+        ['filter-status', 'filter-radical', 'filter-strokes-min', 'filter-strokes-max', 'filter-reading'].forEach(id => {
+            const el = document.getElementById(id);
+            el.oninput = () => this.updateKanjiGrid();
+            el.onchange = () => this.updateKanjiGrid();
+        });
+
+        // Select all
+        document.getElementById('select-all').onchange = (e) => {
+            if (e.target.checked) {
+                this.getFilteredKanji().forEach(k => this.kanjiListSelected.add(k.kanji));
+            } else {
+                this.kanjiListSelected.clear();
+            }
+            this.updateKanjiGridSelection();
+        };
+
+        // Batch test
+        document.getElementById('btn-batch-test').onclick = () => {
+            if (this.kanjiListSelected.size === 0) return;
+            const batchMode = document.getElementById('batch-test-mode').value;
+            const selectedItems = this.kanjiData.filter(k => this.kanjiListSelected.has(k.kanji));
+            const config = { count: 0, method: 'custom', selectedKanji: [...this.kanjiListSelected] };
+            this.activeQuiz = new QuizSession(this.currentGrade, batchMode, selectedItems, this, config);
+            if (batchMode === 'writing') {
+                window.location.hash = 'quiz-writing';
+            } else {
+                window.location.hash = 'quiz-active';
+            }
+        };
+    }
+
+    getFilteredKanji() {
+        const status = document.getElementById('filter-status').value;
+        const radical = document.getElementById('filter-radical').value;
+        const strokesMin = parseInt(document.getElementById('filter-strokes-min').value);
+        const strokesMax = parseInt(document.getElementById('filter-strokes-max').value);
+        const readingQuery = document.getElementById('filter-reading').value.trim().toLowerCase();
+
+        return this.kanjiData.filter(k => {
+            if (status === 'studied' && !storage.isStudied(k.kanji)) return false;
+            if (status === 'unstudied' && storage.isStudied(k.kanji)) return false;
+            if (radical !== 'all' && k.radical_name !== radical) return false;
+            if (k.stroke_count < strokesMin || k.stroke_count > strokesMax) return false;
+            if (readingQuery) {
+                const allReadings = [...k.on_readings, ...k.kun_readings].join(' ').toLowerCase();
+                if (!allReadings.includes(readingQuery)) return false;
+            }
+            return true;
+        });
+    }
+
+    updateKanjiGrid() {
+        const filtered = this.getFilteredKanji();
+        const grid = document.getElementById('kanji-grid');
+        const studiedCount = filtered.filter(k => storage.isStudied(k.kanji)).length;
+        document.getElementById('kanji-list-count').innerText = `${studiedCount} / ${filtered.length}`;
+
+        grid.innerHTML = filtered.map(k => {
+            const isStudied = storage.isStudied(k.kanji);
+            const isSelected = this.kanjiListSelected.has(k.kanji);
+            return `<div class="kanji-grid-item ${isStudied ? 'studied' : 'unstudied'} ${isSelected ? 'selected' : ''}" data-kanji="${k.kanji}">
+                <input type="checkbox" class="kanji-checkbox" ${isSelected ? 'checked' : ''} />
+                <button class="kanji-toggle-btn" data-kanji="${k.kanji}">${isStudied ? '✓' : '○'}</button>
+                <span class="kanji-char font-serif">${k.kanji}</span>
+            </div>`;
+        }).join('');
+
+        // Bind events
+        grid.querySelectorAll('.kanji-grid-item').forEach(item => {
+            // Checkbox click = toggle selection
+            const cb = item.querySelector('.kanji-checkbox');
+            cb.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.toggleKanjiSelection(item.dataset.kanji);
+            });
+
+            // Toggle button = toggle studied/unstudied
+            const toggleBtn = item.querySelector('.kanji-toggle-btn');
+            toggleBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.toggleKanjiStudied(item.dataset.kanji);
+            });
+
+            // Tap on item (not checkbox or toggle) = go to study
+            item.addEventListener('click', () => {
+                const kanji = item.dataset.kanji;
+                const idx = this.kanjiData.findIndex(k => k.kanji === kanji);
+                if (idx !== -1) {
+                    this.studyIndex = idx;
+                    window.location.hash = 'study';
+                }
+            });
+        });
+
+        this.updateSelectedCount();
+    }
+
+    toggleKanjiStudied(kanji) {
+        if (storage.isStudied(kanji)) {
+            storage.unmarkStudied(kanji);
+        } else {
+            storage.markStudied(kanji);
+        }
+        this.updateKanjiGrid();
+    }
+
+    toggleKanjiSelection(kanji) {
+        if (this.kanjiListSelected.has(kanji)) {
+            this.kanjiListSelected.delete(kanji);
+        } else {
+            this.kanjiListSelected.add(kanji);
+        }
+        this.updateKanjiGridSelection();
+    }
+
+    updateKanjiGridSelection() {
+        document.querySelectorAll('.kanji-grid-item').forEach(item => {
+            const isSelected = this.kanjiListSelected.has(item.dataset.kanji);
+            item.classList.toggle('selected', isSelected);
+            const cb = item.querySelector('.kanji-checkbox');
+            if (cb) cb.checked = isSelected;
+        });
+        this.updateSelectedCount();
+    }
+
+    updateSelectedCount() {
+        const count = this.kanjiListSelected.size;
+        document.getElementById('selected-count').innerText = `${count}個選択中`;
+        document.getElementById('btn-batch-test').disabled = count === 0;
     }
 }
 

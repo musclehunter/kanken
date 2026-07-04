@@ -11,11 +11,12 @@ import { dataManager } from './data-manager.js';
 import { HandwritingCanvas } from './canvas.js';
 
 export class QuizSession {
-    constructor(grade, mode, kanjiList, viewsManager) {
+    constructor(grade, mode, kanjiList, viewsManager, config = null) {
         this.grade = grade;
         this.mode = mode; // 'reading' | 'writing' | 'radical' | 'antonym' | 'homophone' | 'same_kun'
         this.kanjiList = [...kanjiList];
         this.viewsManager = viewsManager;
+        this.config = config || storage.getQuizConfig(grade, mode) || { count: 20, method: 'random' };
 
         this.questions = [];
         this.currentIndex = 0;
@@ -25,16 +26,92 @@ export class QuizSession {
         this.canvas = null;
         this.currentGradingResult = null;
         this.wordRelations = null;
+        this.quizStartTime = null;
+        this.timerInterval = null;
+        this.timerRemaining = 0;
 
         this.initSession();
     }
 
+    selectQuestions() {
+        const { count, method } = this.config;
+        const max = count === 0 ? this.kanjiList.length : count; // 0 = 全問
+        let pool = [...this.kanjiList];
+
+        switch (method) {
+            case 'random':
+                pool = this.shuffle(pool);
+                break;
+            case 'unasked':
+                pool = storage.getUnaskedKanji(this.mode, this.kanjiList);
+                if (pool.length === 0) pool = this.shuffle([...this.kanjiList]);
+                break;
+            case 'studied':
+                pool = storage.getStudiedKanji(this.kanjiList);
+                if (pool.length === 0) pool = this.shuffle([...this.kanjiList]);
+                break;
+            case 'unstudied':
+                pool = storage.getUnstudiedKanji(this.kanjiList);
+                if (pool.length === 0) pool = this.shuffle([...this.kanjiList]);
+                break;
+            case 'sequential': {
+                const startPos = storage.getSequentialPosition(this.grade, this.mode);
+                pool = this.kanjiList.slice(startPos);
+                if (pool.length === 0) {
+                    // 全問終了 → 最初に戻る
+                    pool = [...this.kanjiList];
+                    storage.setSequentialPosition(this.grade, this.mode, 0);
+                }
+                break;
+            }
+            case 'wrong':
+                pool = storage.getWrongKanjiForMode(this.mode, this.kanjiList);
+                if (pool.length === 0) pool = this.shuffle([...this.kanjiList]);
+                break;
+            case 'custom':
+                // config.selectedKanji に含まれる漢字のみ
+                if (this.config.selectedKanji) {
+                    const sel = new Set(this.config.selectedKanji);
+                    pool = this.kanjiList.filter(k => sel.has(k.kanji));
+                }
+                break;
+            default:
+                pool = this.shuffle(pool);
+        }
+
+        return pool.slice(0, Math.min(max, pool.length));
+    }
+
+    shuffle(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
     async initSession() {
-        // Use sequential order (not shuffled) so questions follow study order
-        this.questions = [...this.kanjiList].slice(0, Math.min(10, this.kanjiList.length));
+        this.questions = this.selectQuestions();
         this.currentIndex = 0;
         this.score = 0;
         this.wrongAnswers = [];
+
+        // Start quiz timer for time attack mode
+        if (this.config.timeAttack) {
+            this.quizStartTime = Date.now();
+        }
+
+        // Show/hide timer display
+        const timerEl = document.getElementById('quiz-timer');
+        const writingTimerEl = document.getElementById('writing-quiz-timer');
+        if (this.config.timeAttack) {
+            if (timerEl) timerEl.style.display = 'block';
+            if (writingTimerEl) writingTimerEl.style.display = 'block';
+        } else {
+            if (timerEl) timerEl.style.display = 'none';
+            if (writingTimerEl) writingTimerEl.style.display = 'none';
+        }
 
         if (this.mode === 'antonym' || this.mode === 'same_kun') {
             this.wordRelations = await dataManager.getWordRelations();
@@ -74,7 +151,60 @@ export class QuizSession {
             document.getElementById('btn-self-correct').onclick = () => this.submitWritingResult(true);
             document.getElementById('btn-self-incorrect').onclick = () => this.submitWritingResult(false);
             document.getElementById('btn-writing-next').onclick = () => this.goToNextQuestion();
+            document.getElementById('btn-writing-back').onclick = () => {
+                this.viewsManager.activeQuiz = null;
+                window.location.hash = 'study';
+            };
         }
+    }
+
+    startTimer() {
+        this.stopTimer();
+        if (!this.config.timeAttack) return;
+
+        this.timerRemaining = this.config.timeLimit || 15;
+        this.updateTimerDisplay();
+
+        this.timerInterval = setInterval(() => {
+            this.timerRemaining--;
+            this.updateTimerDisplay();
+            if (this.timerRemaining <= 0) {
+                this.stopTimer();
+                this.handleTimeUp();
+            }
+        }, 1000);
+    }
+
+    stopTimer() {
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+            this.timerInterval = null;
+        }
+    }
+
+    updateTimerDisplay() {
+        const sec = this.timerRemaining;
+        const timerSecEl = document.getElementById('quiz-timer-seconds');
+        const writingTimerSecEl = document.getElementById('writing-quiz-timer-seconds');
+        if (timerSecEl) timerSecEl.innerText = sec;
+        if (writingTimerSecEl) writingTimerSecEl.innerText = sec;
+
+        // Change color when running low
+        const timerEl = document.getElementById('quiz-timer');
+        const writingTimerEl = document.getElementById('writing-quiz-timer');
+        const lowClass = sec <= 5 ? 'timer-low' : '';
+        if (timerEl) timerEl.className = `quiz-timer ${lowClass}`;
+        if (writingTimerEl) writingTimerEl.className = `quiz-timer ${lowClass}`;
+    }
+
+    handleTimeUp() {
+        // Time's up = incorrect
+        const q = this.questions[this.currentIndex];
+        this.wrongAnswers.push(q);
+        if (this.mode !== 'writing') {
+            storage.saveQuizResult(q.kanji, this.mode, false);
+        }
+        this.goToNextQuestion();
     }
 
     loadChoiceQuestion() {
@@ -106,6 +236,7 @@ export class QuizSession {
         contextEl.style.display = 'none';
         contextEl.innerText = '';
         this[config.render](q);
+        this.startTimer();
     }
 
     generateDistractors(correctValue, allPossibleValues, isNum = false) {
@@ -136,45 +267,107 @@ export class QuizSession {
     }
 
     renderReadingChoices(questionItem) {
-        const correctRaw = questionItem.kun_readings[0] || questionItem.on_readings[0] || '不明';
-        const hasOkurigana = correctRaw.includes('.') || correctRaw.includes('-');
-
-        // Show kanji with okurigana if applicable
         const charEl = document.getElementById('quiz-q-char');
-        if (hasOkurigana) {
-            const okurigana = correctRaw.split(/[.\-]/)[1] || '';
-            charEl.innerHTML = `${questionItem.kanji}<span class="okurigana">${okurigana}</span>`;
-        } else {
-            charEl.innerText = questionItem.kanji;
-        }
+        const promptEl = document.getElementById('quiz-q-prompt');
+        const contextEl = document.getElementById('quiz-q-context');
 
-        // Correct answer is just the kanji reading part (before dot/hyphen)
-        const correct = hasOkurigana ? correctRaw.split(/[.\-]/)[0] : correctRaw;
+        let correct = '';
 
-        // Build distractor pool - use kanji reading parts only
-        const allReadings = new Set();
-        this.kanjiList.forEach(k => {
-            k.kun_readings.forEach(r => {
-                const parts = r.split(/[.\-]/);
-                allReadings.add(parts[0]);
+        if (questionItem.examples && questionItem.examples.length > 0) {
+            // 例文の中でsentencesを持つものを優先的に選ぶ
+            const exsWithSentences = questionItem.examples.filter(e => e.sentences && e.sentences.length > 0);
+            const ex = exsWithSentences.length > 0
+                ? exsWithSentences[Math.floor(Math.random() * exsWithSentences.length)]
+                : questionItem.examples[Math.floor(Math.random() * questionItem.examples.length)];
+
+            if (ex.sentences && ex.sentences.length > 0) {
+                // 文章問題: 文章内の単語に下線を引いて読みを問う
+                const sentence = ex.sentences[Math.floor(Math.random() * ex.sentences.length)];
+                charEl.innerHTML = sentence.replace(ex.word, `<span class="furigana-target">${ex.word}</span>`);
+                charEl.style.fontSize = '1.4rem';
+                charEl.style.lineHeight = '1.8';
+                promptEl.innerText = '下線の言葉の読みは？';
+            } else {
+                // 例文のみ（文章なし）: 単語を表示して読みを問う
+                charEl.innerHTML = `<span class="furigana-target">${ex.word}</span>`;
+                charEl.style.fontSize = '2rem';
+                charEl.style.lineHeight = '1';
+                promptEl.innerText = '下線の言葉の読みは？';
+            }
+            contextEl.style.display = 'none';
+            // Use the full word reading as the correct answer
+            correct = ex.reading;
+
+            // Build distractor pool from other examples' readings of all kanji in the same grade
+            const allExampleReadings = new Set();
+            this.kanjiList.forEach(k => {
+                if (k.examples) {
+                    k.examples.forEach(e => {
+                        if (e.reading !== correct) allExampleReadings.add(e.reading);
+                    });
+                }
             });
-            k.on_readings.forEach(r => allReadings.add(r));
-        });
 
-        const choices = this.generateDistractors(correct, allReadings, false);
+            const choices = this.generateDistractors(correct, allExampleReadings, false);
 
-        choices.forEach(c => {
-            const btn = document.createElement('button');
-            btn.className = 'choice-btn font-japanese';
-            btn.innerText = c;
-            btn.onclick = () => this.handleChoiceClick(btn, c === correct, questionItem);
-            document.getElementById('quiz-choices').appendChild(btn);
-        });
+            choices.forEach(c => {
+                const btn = document.createElement('button');
+                btn.className = 'choice-btn font-japanese';
+                btn.innerText = c;
+                btn.onclick = () => this.handleChoiceClick(btn, c === correct, questionItem);
+                document.getElementById('quiz-choices').appendChild(btn);
+            });
+        } else {
+            // No examples: show kanji alone, ask for reading
+            const correctRaw = questionItem.kun_readings[0] || questionItem.on_readings[0] || '不明';
+            const hasOkurigana = correctRaw.includes('.') || correctRaw.includes('-');
+            if (hasOkurigana) {
+                const okurigana = correctRaw.split(/[.\-]/)[1] || '';
+                charEl.innerHTML = `${questionItem.kanji}<span class="okurigana">${okurigana}</span>`;
+            } else {
+                charEl.innerText = questionItem.kanji;
+            }
+            charEl.style.fontSize = '';
+            promptEl.innerText = 'この漢字の読み方は？';
+            contextEl.style.display = 'none';
+            correct = hasOkurigana ? correctRaw.split(/[.\-]/)[0] : correctRaw;
+
+            // Build distractor pool from all kanji readings
+            const allReadings = new Set();
+            this.kanjiList.forEach(k => {
+                k.kun_readings.forEach(r => {
+                    const parts = r.split(/[.\-]/);
+                    allReadings.add(parts[0]);
+                });
+                k.on_readings.forEach(r => allReadings.add(r));
+            });
+
+            const choices = this.generateDistractors(correct, allReadings, false);
+
+            choices.forEach(c => {
+                const btn = document.createElement('button');
+                btn.className = 'choice-btn font-japanese';
+                btn.innerText = c;
+                btn.onclick = () => this.handleChoiceClick(btn, c === correct, questionItem);
+                document.getElementById('quiz-choices').appendChild(btn);
+            });
+        }
     }
 
     renderRadicalChoices(questionItem) {
         const correct = questionItem.radical_name || '不明';
         const correctDisplay = questionItem.radical ? `${questionItem.radical}（${questionItem.radical_name}）` : '不明';
+
+        // Show example context
+        const contextEl = document.getElementById('quiz-q-context');
+        if (questionItem.examples && questionItem.examples.length > 0) {
+            const ex = questionItem.examples[Math.floor(Math.random() * questionItem.examples.length)];
+            const blanked = ex.word.replace(questionItem.kanji, '＿');
+            contextEl.innerHTML = `<span class="context-sentence">${blanked}（${ex.reading}）</span>`;
+            contextEl.style.display = 'block';
+        } else {
+            contextEl.style.display = 'none';
+        }
 
         const allRadicals = new Set();
         this.kanjiList.forEach(k => {
@@ -291,6 +484,7 @@ export class QuizSession {
     }
 
     handleChoiceClick(selectedBtn, isCorrect, questionItem) {
+        this.stopTimer();
         const choicesEl = document.getElementById('quiz-choices');
         Array.from(choicesEl.children).forEach(btn => {
             btn.disabled = true;
@@ -339,6 +533,7 @@ export class QuizSession {
     // --- WRITING/DRAWING LOGIC (CANVAS WRITING) ---
     loadWritingQuestion() {
         const q = this.questions[this.currentIndex];
+        this.currentQuestionSaved = false;
 
         document.getElementById('writing-quiz-q-num').innerText = `${this.currentIndex + 1} / ${this.questions.length}`;
         document.getElementById('writing-quiz-progress-bar').style.width = `${((this.currentIndex) / this.questions.length) * 100}%`;
@@ -350,6 +545,8 @@ export class QuizSession {
         document.getElementById('grader-overlay').className = 'grader-overlay hidden';
         document.getElementById('btn-canvas-check').classList.remove('hidden');
         document.getElementById('btn-canvas-clear').disabled = false;
+        document.getElementById('btn-writing-next').classList.add('hidden');
+        document.getElementById('btn-writing-back').classList.remove('hidden');
 
         let promptText, hintText;
         if (q.examples && q.examples.length > 0) {
@@ -365,14 +562,14 @@ export class QuizSession {
 
         document.getElementById('writing-q-word').innerText = promptText;
         document.getElementById('writing-q-hint').innerText = hintText;
+        this.startTimer();
     }
 
     async evaluateWriting() {
+        this.stopTimer();
         const q = this.questions[this.currentIndex];
 
-        // Lock canvas from clearing during check
-        document.getElementById('btn-canvas-clear').disabled = true;
-        document.getElementById('btn-canvas-check').classList.add('hidden');
+        // Keep clear and check buttons enabled for re-grading
 
         // 1. Get user configuration default grader
         const defaultMode = storage.getSetting('grader-mode', 'auto');
@@ -429,6 +626,7 @@ export class QuizSession {
 
             // Save result immediately
             this.currentGradingResult.finalResult = success;
+            this.saveWritingProgressOfQuestion();
         }
     }
 
@@ -446,28 +644,52 @@ export class QuizSession {
         document.getElementById('auto-grader-result').classList.add('hidden');
         document.getElementById('grading-panel').querySelector('.self-grading-buttons').classList.add('hidden');
         document.getElementById('btn-writing-next').classList.remove('hidden');
+        document.getElementById('btn-writing-back').classList.remove('hidden');
+
+        this.saveWritingProgressOfQuestion();
     }
 
     saveWritingProgressOfQuestion() {
         const q = this.questions[this.currentIndex];
         const isCorrect = this.currentGradingResult.finalResult;
 
-        if (isCorrect) {
-            this.score++;
-            storage.saveQuizResult(q.kanji, 'writing', true);
+        if (!this.currentQuestionSaved) {
+            this.currentQuestionSaved = true;
+            this.currentQuestionResult = isCorrect;
+            if (isCorrect) {
+                this.score++;
+                storage.saveQuizResult(q.kanji, 'writing', true);
+            } else {
+                this.wrongAnswers.push(q);
+                storage.saveQuizResult(q.kanji, 'writing', false);
+            }
         } else {
-            this.wrongAnswers.push(q);
-            storage.saveQuizResult(q.kanji, 'writing', false);
+            if (this.currentQuestionResult !== isCorrect) {
+                if (isCorrect) {
+                    this.score++;
+                    const idx = this.wrongAnswers.findIndex(w => w.kanji === q.kanji);
+                    if (idx !== -1) this.wrongAnswers.splice(idx, 1);
+                } else {
+                    this.score--;
+                    this.wrongAnswers.push(q);
+                }
+                this.currentQuestionResult = isCorrect;
+            }
         }
     }
 
     // --- GENERAL TRANSITION SEQUENCE ---
     goToNextQuestion() {
-        if (this.mode === 'writing') {
-            this.saveWritingProgressOfQuestion();
-        }
-
+        this.stopTimer();
         this.currentIndex++;
+
+        // If quiz was started from study mode (single kanji), go back to study with next kanji
+        if (this.questions.length === 1 && this.viewsManager.kanjiData.length > 0) {
+            this.viewsManager.activeQuiz = null;
+            this.viewsManager.studyIndex = Math.min(this.viewsManager.studyIndex + 1, this.viewsManager.kanjiData.length - 1);
+            window.location.hash = 'study';
+            return;
+        }
 
         if (this.currentIndex < this.questions.length) {
             if (this.mode === 'writing') {
@@ -489,6 +711,9 @@ export class QuizSession {
         const percent = Math.round((this.score / this.questions.length) * 100);
         const titleEl = document.getElementById('results-title');
         const msgEl = document.getElementById('results-message');
+        const accuracyEl = document.getElementById('results-accuracy');
+
+        accuracyEl.innerText = `${percent}%`;
 
         if (percent === 100) {
             titleEl.innerText = '素晴らしい！ 満点です 💮';
@@ -499,6 +724,35 @@ export class QuizSession {
         } else {
             titleEl.innerText = 'お疲れ様でした！ 📝';
             msgEl.innerText = '間違えた箇所を復習して、次は合格ライン突破を目指しましょう！';
+        }
+
+        // Timer info (for time attack mode)
+        const timerInfoEl = document.getElementById('results-timer-info');
+        if (this.config.timeAttack && this.quizStartTime) {
+            const totalTime = Math.round((Date.now() - this.quizStartTime) / 1000);
+            const avgTime = Math.round(totalTime / this.questions.length);
+            timerInfoEl.innerText = `所要時間: ${totalTime}秒（1問平均 ${avgTime}秒）`;
+            timerInfoEl.style.display = 'block';
+        } else {
+            timerInfoEl.style.display = 'none';
+        }
+
+        // Session history bars
+        const historyEl = document.getElementById('results-history');
+        const historyBarsEl = document.getElementById('results-history-bars');
+        const sessions = storage.getQuizSessions(this.grade, this.mode).slice(-5);
+        if (sessions.length > 0) {
+            historyBarsEl.innerHTML = sessions.map(s => {
+                const sPercent = Math.round((s.score / s.total) * 100);
+                const isCurrent = s.id === this.lastSessionId;
+                return `<div class="history-bar-item ${isCurrent ? 'current' : ''}">
+                    <div class="history-bar" style="height: ${sPercent}%"></div>
+                    <span class="history-bar-label">${sPercent}%</span>
+                </div>`;
+            }).join('');
+            historyEl.style.display = 'block';
+        } else {
+            historyEl.style.display = 'none';
         }
 
         // Output wrong kanji list badges
@@ -533,6 +787,32 @@ export class QuizSession {
             });
         }
 
+        // Retry-wrong button: only show if there are wrong answers
+        const retryWrongBtn = document.getElementById('btn-results-retry-wrong');
+        if (this.wrongAnswers.length > 0) {
+            retryWrongBtn.style.display = 'block';
+            retryWrongBtn.onclick = () => {
+                // Deduplicate wrong answers
+                const uniqueWrong = [];
+                const seen = new Set();
+                this.wrongAnswers.forEach(q => {
+                    if (!seen.has(q.kanji)) {
+                        seen.add(q.kanji);
+                        uniqueWrong.push(q);
+                    }
+                });
+                const wrongConfig = { count: 0, method: 'custom', selectedKanji: uniqueWrong.map(q => q.kanji) };
+                this.activeQuiz = new QuizSession(this.grade, this.mode, uniqueWrong, this.viewsManager, wrongConfig);
+                if (this.mode === 'writing') {
+                    window.location.hash = 'quiz-writing';
+                } else {
+                    window.location.hash = 'quiz-active';
+                }
+            };
+        } else {
+            retryWrongBtn.style.display = 'none';
+        }
+
         // Set retry callback functions
         document.getElementById('btn-results-retry').onclick = () => {
             this.initSession();
@@ -546,6 +826,23 @@ export class QuizSession {
         document.getElementById('btn-results-home').onclick = () => {
             window.location.hash = 'home';
         };
+
+        // Save session history
+        const sessionId = Date.now();
+        this.lastSessionId = sessionId;
+        storage.saveQuizSession(this.grade, this.mode, this.config, {
+            score: this.score,
+            total: this.questions.length,
+            wrongKanji: this.wrongAnswers.map(q => q.kanji)
+        });
+
+        // Update sequential position
+        if (this.config.method === 'sequential') {
+            const startPos = storage.getSequentialPosition(this.grade, this.mode);
+            const newPos = startPos + this.questions.length;
+            const total = this.kanjiList.length;
+            storage.setSequentialPosition(this.grade, this.mode, newPos >= total ? 0 : newPos);
+        }
 
         // Transition to Results screen
         window.location.hash = 'results';

@@ -72,13 +72,13 @@ export const storage = {
         }
     },
 
-    // Check if a kanji is studied (either manually or via quiz)
+    // Check if a kanji is studied (either manually or via quiz correct answer)
     isStudied(kanji) {
         const record = this.getHistory(kanji);
         if (!record) return false;
         if (record.manually_studied) return true;
         const types = ['reading', 'writing', 'radical', 'antonym', 'homophone', 'same_kun'];
-        return types.some(t => (record[`${t}_attempts`] || 0) > 0);
+        return types.some(t => (record[`${t}_correct`] || 0) > 0);
     },
 
     // Get learning history for all or single kanji
@@ -131,8 +131,8 @@ export const storage = {
         gradeKanjiList.forEach(item => {
             const record = history[item.kanji];
             if (record) {
-                const hasAttempts = types.some(t => (record[`${t}_attempts`] || 0) > 0);
-                if (hasAttempts || record.manually_studied) totalStudied++;
+                const hasCorrect = types.some(t => (record[`${t}_correct`] || 0) > 0);
+                if (hasCorrect || record.manually_studied) totalStudied++;
             }
         });
 
@@ -170,6 +170,116 @@ export const storage = {
         return gradeKanjiList
             .map(item => ({ ...item, _weight: this.getKanjiWeight(item.kanji) }))
             .sort((a, b) => b._weight - a._weight);
+    },
+
+    // Save quiz session result
+    saveQuizSession(grade, mode, config, results) {
+        const key = `${STORAGE_PREFIX}sessions`;
+        let sessions = this.getJson(key) || [];
+        sessions.push({
+            id: Date.now(),
+            grade, mode, config,
+            score: results.score,
+            total: results.total,
+            wrongKanji: results.wrongKanji || [],
+            date: Date.now()
+        });
+        if (sessions.length > 200) sessions = sessions.slice(-200);
+        this.setJson(key, sessions);
+    },
+
+    getQuizSessions(grade = null, mode = null) {
+        const sessions = this.getJson(`${STORAGE_PREFIX}sessions`) || [];
+        return sessions.filter(s =>
+            (grade === null || s.grade === grade) &&
+            (mode === null || s.mode === mode)
+        );
+    },
+
+    getSequentialPosition(grade, mode) {
+        const positions = this.getJson(`${STORAGE_PREFIX}seqpos`) || {};
+        return positions[`${grade}_${mode}`] || 0;
+    },
+
+    setSequentialPosition(grade, mode, position) {
+        const positions = this.getJson(`${STORAGE_PREFIX}seqpos`) || {};
+        positions[`${grade}_${mode}`] = position;
+        this.setJson(`${STORAGE_PREFIX}seqpos`, positions);
+    },
+
+    getTypeStats(grade, mode, gradeKanjiList) {
+        const history = this.getHistory();
+        let totalAttempts = 0, totalCorrect = 0, uniqueKanji = 0;
+        gradeKanjiList.forEach(item => {
+            const record = history[item.kanji];
+            if (record) {
+                const att = record[`${mode}_attempts`] || 0;
+                const cor = record[`${mode}_correct`] || 0;
+                if (att > 0) {
+                    totalAttempts += att;
+                    totalCorrect += cor;
+                    uniqueKanji++;
+                }
+            }
+        });
+        return {
+            attempts: totalAttempts,
+            correct: totalCorrect,
+            accuracy: totalAttempts > 0 ? Math.round((totalCorrect / totalAttempts) * 100) : 0,
+            uniqueKanji,
+            totalKanji: gradeKanjiList.length
+        };
+    },
+
+    getAskedKanji(mode, gradeKanjiList) {
+        const history = this.getHistory();
+        return gradeKanjiList.filter(item => {
+            const record = history[item.kanji];
+            return record && (record[`${mode}_attempts`] || 0) > 0;
+        });
+    },
+
+    getUnaskedKanji(mode, gradeKanjiList) {
+        const history = this.getHistory();
+        return gradeKanjiList.filter(item => {
+            const record = history[item.kanji];
+            return !record || (record[`${mode}_attempts`] || 0) === 0;
+        });
+    },
+
+    getStudiedKanji(gradeKanjiList) {
+        return gradeKanjiList.filter(item => this.isStudied(item.kanji));
+    },
+
+    getUnstudiedKanji(gradeKanjiList) {
+        return gradeKanjiList.filter(item => !this.isStudied(item.kanji));
+    },
+
+    getWrongKanjiForMode(mode, gradeKanjiList) {
+        const history = this.getHistory();
+        const wrongList = [];
+        gradeKanjiList.forEach(item => {
+            const record = history[item.kanji];
+            if (record) {
+                const att = record[`${mode}_attempts`] || 0;
+                const cor = record[`${mode}_correct`] || 0;
+                if (att > 0 && cor / att < 0.7) {
+                    wrongList.push(item);
+                }
+            }
+        });
+        return wrongList;
+    },
+
+    saveQuizConfig(grade, mode, config) {
+        const configs = this.getJson(`${STORAGE_PREFIX}quizconfig`) || {};
+        configs[`${grade}_${mode}`] = config;
+        this.setJson(`${STORAGE_PREFIX}quizconfig`, configs);
+    },
+
+    getQuizConfig(grade, mode) {
+        const configs = this.getJson(`${STORAGE_PREFIX}quizconfig`) || {};
+        return configs[`${grade}_${mode}`] || { count: 20, method: 'random' };
     },
 
     // Save Settings

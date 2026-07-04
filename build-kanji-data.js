@@ -284,7 +284,7 @@ async function fetchKanjiDetail(k) {
   catch (e) { if (e.message === '404') return null; throw e; }
 }
 
-async function fetchExamples(k) {
+async function fetchExamples(k, sentenceMap) {
   try {
     const words = await fetchJSON(SRC.wordsAPI + encodeURIComponent(k));
     const ex = [], seen = new Set();
@@ -301,21 +301,23 @@ async function fetchExamples(k) {
         const word = v.written, reading = v.pronounced;
         if (!word || word.length > 4 || seen.has(word) || !word.includes(k)) continue;
         seen.add(word);
-        ex.push({ word, reading });
+        // Tatoebaの例文を追加
+        const sentences = sentenceMap ? (sentenceMap[word] || []) : [];
+        ex.push({ word, reading, sentences });
       }
     }
     return ex;
   } catch { return []; }
 }
 
-async function processGrade(kanjiList, k2r, rMap, kanjidic2, gradeId) {
+async function processGrade(kanjiList, k2r, rMap, kanjidic2, gradeId, sentenceMap) {
   const results = [];
   for (let i = 0; i < kanjiList.length; i += CONCURRENCY) {
     const batch = kanjiList.slice(i, i + CONCURRENCY);
     const items = await Promise.all(batch.map(async k => {
       const d = await fetchKanjiDetail(k);
       if (!d) return null;
-      const ex = await fetchExamples(k);
+      const ex = await fetchExamples(k, sentenceMap);
       let rad = null;
       const comps = k2r[k];
       if (comps) {
@@ -433,6 +435,18 @@ async function main() {
   const kanjidic2 = await loadKanjidic2(rMap);
 
   const all = [], gradeFiles = {};
+  
+  // Tatoeba例文データを読み込み
+  const sentencesPath = path.join(OUT, 'tatoeba-sentences.json');
+  let sentenceMap = null;
+  if (fs.existsSync(sentencesPath)) {
+    console.log('[4/8] tatoeba-sentences.json 読み込み中...');
+    sentenceMap = JSON.parse(fs.readFileSync(sentencesPath, 'utf8'));
+    console.log(`  → ${Object.keys(sentenceMap).length} 単語の例文`);
+  } else {
+    console.log('[4/8] tatoeba-sentences.json なし（例文スキップ）');
+  }
+
   if (skipAPI) {
     console.log('[5/8] --skip-api: 既存JSONファイルから読み込み...');
     for (const g of Object.keys(byGrade).map(Number).sort((a, b) => b - a)) {
@@ -448,11 +462,28 @@ async function main() {
     console.log('[5/8] kanjiapi.dev からデータ取得中...');
     for (const g of Object.keys(byGrade).map(Number).sort((a, b) => b - a)) {
       console.log(`  級 ${g}: ${byGrade[g].length} 字処理中...`);
-      const data = await processGrade(byGrade[g], k2r, rMap, kanjidic2, g);
+      const data = await processGrade(byGrade[g], k2r, rMap, kanjidic2, g, sentenceMap);
       gradeFiles[g] = data;
       all.push(...data);
       console.log(`  → ${data.length} 字完了`);
     }
+  }
+
+  // sentencesを既存データに統合（--skip-api時も実行）
+  if (sentenceMap) {
+    console.log('[5.5/8] 例文データ統合中...');
+    let merged = 0, total = 0;
+    for (const k of all) {
+      if (!k.examples) continue;
+      for (const ex of k.examples) {
+        total++;
+        if (sentenceMap[ex.word]) {
+          ex.sentences = sentenceMap[ex.word];
+          merged++;
+        }
+      }
+    }
+    console.log(`  → ${merged}/${total} 例文に文章を統合`);
   }
 
   console.log('[6/8] 同音異字マップ構築中...');
