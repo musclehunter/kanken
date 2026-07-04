@@ -12,7 +12,7 @@ import { QuizSession } from './quiz.js';
 import { HandwritingCanvas } from './canvas.js';
 
 // Application version (bump on each release)
-export const APP_VERSION = '2.1.8';
+export const APP_VERSION = '2.1.9';
 
 class VIEWS_ROUTER {
     constructor() {
@@ -91,18 +91,18 @@ class VIEWS_ROUTER {
 
         // Target view detection
         let targetViewId = 'view-home';
-        let navActiveId = 'nav-home';
+        let navActiveId = null;
 
         switch (route) {
             case 'home':
                 targetViewId = 'view-home';
-                navActiveId = 'nav-home';
+                navActiveId = null;
                 this.renderHomeScreen();
                 break;
 
             case 'mode-select':
                 targetViewId = 'view-mode-select';
-                navActiveId = 'nav-home';
+                navActiveId = null;
                 this.renderModeSelectScreen();
                 break;
 
@@ -120,7 +120,7 @@ class VIEWS_ROUTER {
 
             case 'kanji-list':
                 targetViewId = 'view-kanji-list';
-                navActiveId = 'nav-study';
+                navActiveId = 'nav-kanji-list';
                 this.renderKanjiListScreen();
                 break;
 
@@ -155,7 +155,7 @@ class VIEWS_ROUTER {
 
             default:
                 targetViewId = 'view-home';
-                navActiveId = 'nav-home';
+                navActiveId = null;
         }
 
         // Render target view
@@ -171,6 +171,13 @@ class VIEWS_ROUTER {
 
         // Update breadcrumb
         this.updateBreadcrumb(route);
+
+        // Update header grade label
+        const gradeLabels = { 2.5: '準2級', 1.5: '準1級' };
+        const headerGradeLabel = document.getElementById('header-grade-label');
+        if (headerGradeLabel) {
+            headerGradeLabel.innerText = gradeLabels[this.currentGrade] || `${this.currentGrade}級`;
+        }
 
         // Scroll window back to top on transitions
         document.getElementById('main-content').scrollTop = 0;

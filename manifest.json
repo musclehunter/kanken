@@ -2,7 +2,7 @@
   "name": "漢検マスター",
   "short_name": "漢検マスター",
   "description": "手書き採点対応の漢字検定対策PWAアプリ",
-  "version": "2.1.8",
+  "version": "2.1.9",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#121216",

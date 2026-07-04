@@ -120,6 +120,23 @@ html {
   margin-right: 2px;
 }
 
+.header-grade-link {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.06);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: var(--transition-smooth);
+}
+.header-grade-link:active {
+  background: rgba(255,255,255,0.12);
+}
+
 .main-content {
   flex: 1;
   overflow-y: auto;
