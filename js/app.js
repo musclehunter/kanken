@@ -12,7 +12,7 @@ import { QuizSession } from './quiz.js';
 import { HandwritingCanvas } from './canvas.js';
 
 // Application version (bump on each release)
-export const APP_VERSION = '2.1.9';
+export const APP_VERSION = '2.1.12';
 
 class VIEWS_ROUTER {
     constructor() {

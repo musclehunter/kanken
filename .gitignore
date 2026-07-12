@@ -5,3 +5,6 @@ node_modules/
 .build-version
 __check*.js
 runs.json
+www/
+android/
+.gradle/

@@ -113,7 +113,7 @@ export class QuizSession {
             if (writingTimerEl) writingTimerEl.style.display = 'none';
         }
 
-        if (this.mode === 'antonym' || this.mode === 'same_kun') {
+        if (this.mode === 'antonym' || this.mode === 'same_kun' || this.mode === 'homophone') {
             this.wordRelations = await dataManager.getWordRelations();
         }
 
@@ -409,14 +409,27 @@ export class QuizSession {
     }
 
     renderHomophoneChoices(questionItem) {
-        const reading = questionItem.on_readings[0];
-        if (!reading) { this.goToNextQuestion(); return; }
+        const correct = questionItem.kanji;
+        let same = [];
 
-        const same = this.kanjiList.filter(k => k.on_readings.includes(reading) && k.kanji !== questionItem.kanji);
+        // まず word-relations.json の homophones を使用
+        const relationEntry = (this.wordRelations?.homophones || []).find(h => h.kanji === correct);
+        if (relationEntry && Array.isArray(relationEntry.homophones) && relationEntry.homophones.length > 0) {
+            same = relationEntry.homophones.filter(k => k !== correct);
+        }
+
+        // フォールバック: 音読みが同じ漢字を動的に検索
+        if (same.length === 0) {
+            const reading = questionItem.on_readings[0];
+            if (!reading) { this.goToNextQuestion(); return; }
+            same = this.kanjiList
+                .filter(k => k.on_readings.includes(reading) && k.kanji !== correct)
+                .map(k => k.kanji);
+        }
+
         if (same.length === 0) { this.goToNextQuestion(); return; }
 
-        const correct = questionItem.kanji;
-        const allKanji = new Set(same.map(k => k.kanji));
+        const allKanji = new Set(same);
         allKanji.add(correct);
 
         // Show example sentence with blank for context
@@ -427,7 +440,7 @@ export class QuizSession {
             contextEl.innerHTML = `<span class="context-sentence">${blanked}（${ex.reading}）</span>`;
             contextEl.style.display = 'block';
         } else {
-            const meanings = questionItem.meanings.join(', ');
+            const meanings = (questionItem.meanings_ja || questionItem.meanings || []).join(', ');
             contextEl.innerHTML = `<span class="context-sentence">意味: ${meanings}</span>`;
             contextEl.style.display = 'block';
         }
@@ -553,11 +566,11 @@ export class QuizSession {
             const ex = q.examples[Math.floor(Math.random() * q.examples.length)];
             const blanked = ex.word.replace(q.kanji, '＿');
             promptText = `${blanked}（${ex.reading}）`;
-            hintText = `意味: ${q.meanings.join(', ')}`;
+            hintText = `意味: ${(q.meanings_ja || q.meanings || []).join(', ')}`;
         } else {
             const readPrompt = (q.kun_readings[0] || q.on_readings[0] || '').replace(/\.|\-/g, '');
             promptText = readPrompt;
-            hintText = `意味: ${q.meanings.join(', ')}`;
+            hintText = `意味: ${(q.meanings_ja || q.meanings || []).join(', ')}`;
         }
 
         document.getElementById('writing-q-word').innerText = promptText;

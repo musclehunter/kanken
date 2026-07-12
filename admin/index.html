@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>漢検マスター データ管理</title>
+    <link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="brand">
+                <h1>漢検マスター</h1>
+                <p>データ管理コンソール</p>
+            </div>
+            <nav class="nav-tabs">
+                <button class="nav-tab active" data-tab="kanji">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    漢字データ
+                </button>
+                <button class="nav-tab" data-tab="relations">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                    Word Relations
+                </button>
+                <button class="nav-tab" data-tab="examples">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    例文一覧
+                </button>
+                <button class="nav-tab" data-tab="audit">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    監査
+                </button>
+            </nav>
+            <div class="sidebar-footer">
+                ローカル専用 / ブラウザで http://localhost:3456
+            </div>
+        </aside>
+
+        <div class="content">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <span class="topbar-label">級:</span>
+                    <div id="grade-toggles" class="grade-toggles"></div>
+                    <button id="btn-select-all-grades" class="btn btn-sm btn-secondary">全選択</button>
+                    <button id="btn-deselect-all-grades" class="btn btn-sm btn-secondary">全解除</button>
+                </div>
+                <div class="topbar-actions">
+                    <button id="btn-save" class="btn btn-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                        保存
+                    </button>
+                    <button id="btn-reload" class="btn btn-secondary">再読み込み</button>
+                </div>
+            </header>
+
+            <main class="main">
+                <h2 id="page-title" class="main-title">漢字データ</h2>
+                <section id="tab-kanji" class="tab-panel active">
+                    <div class="card">
+                        <div class="toolbar">
+                            <div class="toolbar-left">
+                                <input type="text" id="kanji-search" class="search-input" placeholder="漢字・読み・意味で検索...">
+                                <span id="kanji-count" class="count"></span>
+                            </div>
+                            <div class="toolbar-right">
+                                <button id="btn-add-kanji" class="btn btn-primary">漢字を追加</button>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table id="kanji-table" class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th data-sort="kanji">漢字</th>
+                                        <th data-sort="on_readings">音読み</th>
+                                        <th data-sort="kun_readings">訓読み</th>
+                                        <th data-sort="meanings">英語意味</th>
+                                        <th data-sort="meanings_ja">日本語意味</th>
+                                        <th data-sort="examples">例文数</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="tab-relations" class="tab-panel">
+                    <div class="card">
+                        <div class="toolbar">
+                            <div class="toolbar-left">
+                                <span id="relations-status" class="status"></span>
+                            </div>
+                            <div class="toolbar-right">
+                                <button id="btn-save-relations" class="btn btn-primary">保存</button>
+                            </div>
+                        </div>
+                        <div class="relations-editor">
+                            <div class="form-row">
+                                <label>
+                                    <span class="badge badge-red">対義語</span>
+                                    antonyms
+                                </label>
+                                <textarea id="relations-antonyms" class="json-editor"></textarea>
+                            </div>
+                            <div class="form-row">
+                                <label>
+                                    <span class="badge badge-blue">類義語</span>
+                                    synonyms
+                                </label>
+                                <textarea id="relations-synonyms" class="json-editor"></textarea>
+                            </div>
+                            <div class="form-row">
+                                <label>
+                                    <span class="badge badge-amber">同訓異字</span>
+                                    same_kun
+                                </label>
+                                <textarea id="relations-same_kun" class="json-editor"></textarea>
+                            </div>
+                            <div class="form-row">
+                                <label>
+                                    <span class="badge badge-green">同音異字</span>
+                                    homophones
+                                </label>
+                                <textarea id="relations-homophones" class="json-editor"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="tab-examples" class="tab-panel">
+                    <div class="card">
+                        <div class="toolbar">
+                            <div class="toolbar-left">
+                                <select id="examples-filter" class="select-input">
+                                    <option value="all">すべて</option>
+                                    <option value="ok">正常（15文字以内）</option>
+                                    <option value="long">15文字超</option>
+                                    <option value="too_long">20文字超</option>
+                                    <option value="inappropriate">不適切表現</option>
+                                    <option value="empty">例文なし</option>
+                                </select>
+                                <button id="btn-load-examples" class="btn btn-primary">表示</button>
+                                <span id="examples-count" class="count"></span>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table id="examples-table" class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>級</th>
+                                        <th>漢字</th>
+                                        <th>単語</th>
+                                        <th>読み</th>
+                                        <th>文字数</th>
+                                        <th>状態</th>
+                                        <th>例文</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="tab-audit" class="tab-panel">
+                    <div class="card">
+                        <div class="toolbar">
+                            <div class="toolbar-left">
+                                <button id="btn-run-audit" class="btn btn-primary">監査を実行</button>
+                                <span id="audit-count" class="count"></span>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table id="audit-table" class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>級</th>
+                                        <th>漢字</th>
+                                        <th>単語</th>
+                                        <th>文字数</th>
+                                        <th>種別</th>
+                                        <th>例文</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">漢字を編集</h2>
+                <button id="modal-close" class="btn btn-icon">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="kanji-form">
+                    <input type="hidden" id="edit-index">
+                    <div class="form-grid">
+                        <div class="form-row">
+                            <label>漢字</label>
+                            <input type="text" id="edit-kanji" required>
+                        </div>
+                        <div class="form-row">
+                            <label>例文数</label>
+                            <input type="text" id="edit-examples-count" readonly>
+                        </div>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-row">
+                            <label>音読み</label>
+                            <input type="text" id="edit-on_readings" placeholder="スペース区切り">
+                        </div>
+                        <div class="form-row">
+                            <label>訓読み</label>
+                            <input type="text" id="edit-kun_readings" placeholder="スペース区切り">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <label>英語意味（1行に1つ）</label>
+                        <textarea id="edit-meanings" rows="2"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <label>日本語意味（1行に1つ）</label>
+                        <textarea id="edit-meanings_ja" rows="2"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <label>例文 JSON</label>
+                        <textarea id="edit-examples" rows="8"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" id="btn-delete-kanji" class="btn btn-danger">削除</button>
+                        <button type="submit" class="btn btn-primary">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+    <script src="/admin/admin.js"></script>
+</body>
+</html>
