@@ -8,3 +8,15 @@ runs.json
 www/
 android/
 .gradle/
+
+# 環境変数（APIキー等）
+.env
+
+# 管理画面・生成スクリプトの中間ファイル
+js/grades/backups/
+js/grades/vocab-*.json
+js/grades/sentences-*.json
+js/grades/examples-*.json
+js/grades/kentei-*-ja-*.json
+js/grades/kentei-*-nohomo-*.json
+status*.txt
