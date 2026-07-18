@@ -14,7 +14,12 @@
     "merge:sentences": "node scripts/merge-sentences.js",
     "generate:meanings-ja": "node scripts/generate-meanings-ja.js",
     "migrate:homophones": "node scripts/migrate-homophones.js",
-    "admin": "node admin-server.js"
+    "admin": "node admin-server.js",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "jest": {
+    "testMatch": ["**/admin/*.test.js"]
   },
   "dependencies": {
     "@capacitor/android": "^6.0.0",
@@ -23,6 +28,7 @@
   "devDependencies": {
     "@capacitor/cli": "^6.0.0",
     "dotenv": "^16.6.1",
+    "jest": "^30.4.2",
     "typescript": "^6.0.3"
   }
 }

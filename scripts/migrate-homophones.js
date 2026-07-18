@@ -100,21 +100,51 @@ async function main() {
         }
     }
 
-    // homophones エントリを作成
-    const homophonesEntries = [];
-    for (const [kanji, set] of homophonesMap) {
-        homophonesEntries.push({
-            kanji,
-            homophones: [...set]
-        });
+    // ── マージロジック ──────────────────────────────────────────────────
+    // 既存の homophones を「手動(_manual:true)」と「自動」に分類する
+    const existingEntries = wordRelations.homophones || [];
+    const manualMap = new Map(); // kanji → 手動エントリ
+    for (const entry of existingEntries) {
+        if (entry._manual) {
+            manualMap.set(entry.kanji, entry);
+        }
     }
 
-    wordRelations.homophones = homophonesEntries;
+    // kentei 由来エントリを生成し、手動エントリとマージする
+    // 同じ漢字の手動エントリがある場合は、自動側の漢字リストを手動側にユニオンで追加する
+    const mergedEntries = [];
+    let autoCount = 0, mergedCount = 0;
+
+    for (const [kanji, autoSet] of homophonesMap) {
+        const manual = manualMap.get(kanji);
+        if (manual) {
+            // 手動エントリを優先し、自動側の漢字を追加（重複除去）
+            const merged = new Set([...manual.homophones, ...autoSet]);
+            mergedEntries.push({ kanji, homophones: [...merged], _manual: true });
+            manualMap.delete(kanji); // 処理済みとしてマークして後で再追加しない
+            mergedCount++;
+        } else {
+            // 自動生成エントリ（_manual なし）
+            mergedEntries.push({ kanji, homophones: [...autoSet] });
+            autoCount++;
+        }
+    }
+
+    // kentei に存在しない手動専用エントリをそのまま保持
+    let manualOnlyCount = 0;
+    for (const entry of manualMap.values()) {
+        mergedEntries.push(entry);
+        manualOnlyCount++;
+    }
+
+    wordRelations.homophones = mergedEntries;
 
     fs.writeFileSync(WORD_RELATIONS_PATH, JSON.stringify(wordRelations, null, 2));
     console.log(`\n✅ word-relations.json 更新: ${WORD_RELATIONS_PATH}`);
     console.log(`   処理した級: ${processedGrades.join(', ')}`);
-    console.log(`   homophones エントリ: ${homophonesEntries.length}`);
+    console.log(`   自動生成エントリ: ${autoCount}`);
+    console.log(`   手動×自動マージ: ${mergedCount}`);
+    console.log(`   手動専用エントリ: ${manualOnlyCount}`);
 }
 
 // 確認プロンプト

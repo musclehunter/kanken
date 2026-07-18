@@ -98,7 +98,7 @@ function convertToExamples(sentencesItem) {
             examples.push({
                 word: c.word,
                 reading: c.reading,
-                sentences: [c.example]
+                sentences: [{ id: crypto.randomUUID(), text: c.example }]
             });
         }
     }
@@ -108,7 +108,7 @@ function convertToExamples(sentencesItem) {
             examples.push({
                 word: k.word,
                 reading: k.reading,
-                sentences: [k.example]
+                sentences: [{ id: crypto.randomUUID(), text: k.example }]
             });
         }
     }

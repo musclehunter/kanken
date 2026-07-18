@@ -20,8 +20,16 @@ function formatTimestamp(date = new Date()) {
     return `${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}-${pad(date.getHours())}${pad(date.getMinutes())}${pad(date.getSeconds())}`;
 }
 
+function getSentenceText(s) {
+    if (typeof s === 'string') return s;
+    if (s && typeof s === 'object') return s.text || '';
+    return '';
+}
+
 function hasSentences(ex) {
-    return Array.isArray(ex.sentences) && ex.sentences.length > 0 && ex.sentences.some(s => typeof s === 'string' && s.trim().length > 0);
+    return Array.isArray(ex.sentences) &&
+        ex.sentences.length > 0 &&
+        ex.sentences.some(s => getSentenceText(s).trim().length > 0);
 }
 
 async function main() {

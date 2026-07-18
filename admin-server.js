@@ -193,19 +193,19 @@ function getExamples(targetGrades = null, filter = 'all') {
         const file = getGradePath(grade);
         if (!fs.existsSync(file)) continue;
         const list = JSON.parse(fs.readFileSync(file, 'utf8'));
-        for (let i = 0; i < list.length; i++) {
-            const item = list[i];
+        for (const item of list) {
             if (!item.examples) continue;
-            for (const ex of item.examples) {
+            for (let w = 0; w < item.examples.length; w++) {
+                const ex = item.examples[w];
                 if (!ex.sentences || ex.sentences.length === 0) {
-                    // 例文がない語彙も all の場合は表示
                     if (filter === 'all') {
                         examples.push({
                             grade,
                             kanji: item.kanji,
-                            kanjiIndex: i,
+                            wordIndex: w,
                             word: ex.word,
                             reading: ex.reading || '',
+                            sentenceId: null,
                             sentence: '',
                             len: 0,
                             type: 'empty'
@@ -213,9 +213,12 @@ function getExamples(targetGrades = null, filter = 'all') {
                     }
                     continue;
                 }
-                for (const sentence of ex.sentences) {
-                    const len = countChars(sentence);
-                    const bad = checkInappropriate(sentence);
+                for (const sentObj of ex.sentences) {
+                    // { id, text } 形式と旧来の文字列形式の両方を許容
+                    const sentenceId = sentObj && typeof sentObj === 'object' ? sentObj.id : null;
+                    const sentenceText = sentObj && typeof sentObj === 'object' ? sentObj.text : String(sentObj);
+                    const len = countChars(sentenceText);
+                    const bad = checkInappropriate(sentenceText);
                     const type = len > strictMax ? 'too_long' : (len > maxLen ? 'long' : (bad.length > 0 ? 'inappropriate' : 'ok'));
 
                     if (filter === 'all' ||
@@ -226,10 +229,11 @@ function getExamples(targetGrades = null, filter = 'all') {
                         examples.push({
                             grade,
                             kanji: item.kanji,
-                            kanjiIndex: i,
+                            wordIndex: w,
                             word: ex.word,
                             reading: ex.reading || '',
-                            sentence,
+                            sentenceId,
+                            sentence: sentenceText,
                             len,
                             type,
                             keywords: bad.length > 0 ? bad : undefined
