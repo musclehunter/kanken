@@ -31,10 +31,7 @@ const MIME_TYPES = {
 
 function sendJSON(res, status, data) {
     res.writeHead(status, {
-        'Content-Type': 'application/json; charset=utf-8',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, PUT, POST, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type'
+        'Content-Type': 'application/json; charset=utf-8'
     });
     res.end(JSON.stringify(data));
 }
@@ -67,12 +64,20 @@ const server = http.createServer(async (req, res) => {
     const parsed = parse(req.url, true);
     const pathname = parsed.pathname;
 
+    // 同一オリジンのローカル管理UI以外からのブラウザ要求は拒否する（クロスオリジン/CSRF対策）
+    const origin = req.headers.origin;
+    if (origin) {
+        let originHost = null;
+        try { originHost = new URL(origin).hostname; } catch (e) { originHost = null; }
+        if (originHost !== 'localhost' && originHost !== '127.0.0.1') {
+            res.writeHead(403, { 'Content-Type': 'text/plain; charset=utf-8' });
+            res.end('Forbidden');
+            return;
+        }
+    }
+
     if (req.method === 'OPTIONS') {
-        res.writeHead(204, {
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'GET, PUT, POST, DELETE, OPTIONS',
-            'Access-Control-Allow-Headers': 'Content-Type'
-        });
+        res.writeHead(204);
         res.end();
         return;
     }
@@ -94,6 +99,9 @@ const server = http.createServer(async (req, res) => {
             const gradeMatch = pathname.match(/^\/api\/grade\/(.+)$/);
             if (gradeMatch) {
                 const grade = decodeURIComponent(gradeMatch[1]);
+                if (!/^\d+(?:\.5)?$/.test(grade)) {
+                    return sendJSON(res, 400, { error: `不正な級指定です: ${grade}` });
+                }
                 const file = getGradePath(grade);
                 if (!fs.existsSync(file)) {
                     return sendJSON(res, 404, { error: `ファイルが見つかりません: ${file}` });
@@ -253,7 +261,7 @@ function runAudit(targetGrades = null) {
     });
 }
 
-server.listen(PORT, () => {
+server.listen(PORT, '127.0.0.1', () => {
     console.log(`🚀 管理サーバーを起動しました: http://localhost:${PORT}`);
     console.log(`   データディレクトリ: ${GRADES_DIR}`);
 });
