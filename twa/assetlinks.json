@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "jp.masanobu.kanken",
+      "sha256_cert_fingerprints": [
+        "ED:BA:2E:2B:0A:32:24:52:93:83:6A:D0:56:8B:87:8D:27:F6:0F:1F:CD:18:CB:F5:52:81:CE:75:4C:00:5D:4F"
+      ]
+    }
+  }
+]

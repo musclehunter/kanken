@@ -1,0 +1,17 @@
+# Signing keystore — never commit
+*.keystore
+*.jks
+
+# Bubblewrap-generated Android project & build outputs
+app/
+gradle/
+gradlew
+gradlew.bat
+build.gradle
+settings.gradle
+gradle.properties
+manifest-checksum.txt
+store_icon.png
+*.apk
+*.aab
+*.idsig

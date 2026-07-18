@@ -1,0 +1,52 @@
+{
+  "packageId": "jp.masanobu.kanken",
+  "host": "masanobu.jp",
+  "name": "漢検マスター",
+  "launcherName": "漢検マスター",
+  "display": "standalone",
+  "themeColor": "#121214",
+  "themeColorDark": "#000000",
+  "navigationColor": "#000000",
+  "navigationColorDark": "#000000",
+  "navigationDividerColor": "#000000",
+  "navigationDividerColorDark": "#000000",
+  "backgroundColor": "#121216",
+  "enableNotifications": true,
+  "startUrl": "/kanken/index.html",
+  "iconUrl": "https://masanobu.jp/kanken/icons/icon-512.png",
+  "maskableIconUrl": "https://masanobu.jp/kanken/icons/icon-512.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "./android.keystore",
+    "alias": "android"
+  },
+  "appVersionName": "1",
+  "appVersionCode": 1,
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://masanobu.jp/kanken/manifest.json",
+  "fallbackType": "customtabs",
+  "features": {},
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://masanobu.jp/kanken/",
+  "minSdkVersion": 21,
+  "orientation": "portrait-primary",
+  "fingerprints": [
+    {
+      "name": "android.keystore",
+      "value": "ED:BA:2E:2B:0A:32:24:52:93:83:6A:D0:56:8B:87:8D:27:F6:0F:1F:CD:18:CB:F5:52:81:CE:75:4C:00:5D:4F"
+    }
+  ],
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "protocolHandlers": [],
+  "fileHandlers": [],
+  "launchHandlerClientMode": "",
+  "displayOverride": [],
+  "appVersion": "1"
+}
