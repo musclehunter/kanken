@@ -411,6 +411,7 @@ export class QuizSession {
 
     renderHomophoneChoices(questionItem) {
         const correct = questionItem.kanji;
+        const reading = (questionItem.on_readings && questionItem.on_readings[0]) || '';
         let same = [];
 
         // まず word-relations.json の homophones を使用
@@ -421,7 +422,6 @@ export class QuizSession {
 
         // フォールバック: 音読みが同じ漢字を動的に検索
         if (same.length === 0) {
-            const reading = questionItem.on_readings[0];
             if (!reading) { this.goToNextQuestion(); return; }
             same = this.kanjiList
                 .filter(k => k.on_readings.includes(reading) && k.kanji !== correct)
