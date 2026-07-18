@@ -165,12 +165,8 @@ function updateAndroidGradleVersion(version) {
         `versionName "${version}"`
     );
 
-    // versionCode の計算 (A.B.C -> A * 10000 + B * 100 + C)
-    const parts = version.split('.');
-    const major = parseInt(parts[0], 10);
-    const minor = parseInt(parts[1], 10);
-    const patch = parseInt(parts[2] || '0', 10);
-    const versionCode = major * 10000 + minor * 100 + patch;
+    // versionCode (Unix epoch minutes)
+    const versionCode = Math.floor(Date.now() / 60000);
 
     content = content.replace(
         /versionCode \d+/,
