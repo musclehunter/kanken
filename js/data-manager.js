@@ -8,6 +8,9 @@
 const DB_NAME = 'KanjiMasterDB';
 const DB_VERSION = 1;
 
+// GitHub Pages remote sync URL
+const REMOTE_URL_BASE = 'https://musclehunter.github.io/kanken/';
+
 let dbPromise = null;
 
 // Initialize IndexedDB
@@ -77,15 +80,44 @@ export const dataManager = {
         }
     },
 
+    // Load examples for a grade (best-effort; falls back to embedded examples)
+    async loadExamples(gradeId) {
+        try {
+            const res = await fetch(`./js/grades/examples-${gradeId}.json`);
+            if (!res.ok) return null;
+            const data = await res.json();
+            return data.examples || null;
+        } catch (e) {
+            console.warn(`No separate examples file for grade ${gradeId}:`, e.message);
+            return null;
+        }
+    },
+
+    // Merge examples into kanji list
+    mergeExamples(list, examples) {
+        if (!examples) return list;
+        return list.map(item => {
+            const ex = examples[item.kanji];
+            if (ex) {
+                return { ...item, examples: ex };
+            }
+            return item;
+        });
+    },
+
     // Download grade on-demand from local JSON files
     async downloadGrade(gradeId) {
         console.log(`Loading grade ${gradeId} from local assets...`);
         const filename = `kentei-${gradeId}.json`;
 
         try {
-            const res = await fetch(`./js/grades/${filename}`);
+            const [res, examples] = await Promise.all([
+                fetch(`./js/grades/${filename}`),
+                this.loadExamples(gradeId)
+            ]);
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            const list = await res.json();
+            let list = await res.json();
+            list = this.mergeExamples(list, examples);
 
             const db = await getDB();
             const tx = db.transaction('kanji', 'readwrite');
@@ -175,13 +207,82 @@ export const dataManager = {
         return null;
     },
 
-    // Sync is simple local reload
+    // Sync from remote GitHub Pages repository, fallback to local bundle
     async syncGrade(gradeId) {
+        const filename = `kentei-${gradeId}.json`;
+        const remoteUrl = `${REMOTE_URL_BASE}js/grades/${filename}?t=${Date.now()}`;
+        const remoteExamplesUrl = `${REMOTE_URL_BASE}js/grades/examples-${gradeId}.json?t=${Date.now()}`;
         try {
-            await this.downloadGrade(gradeId);
+            console.log(`Syncing Grade ${gradeId} from remote: ${remoteUrl}`);
+            const res = await fetch(remoteUrl);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            let list = await res.json();
+
+            // Try to sync examples file as well
+            try {
+                const exRes = await fetch(remoteExamplesUrl);
+                if (exRes.ok) {
+                    const exData = await exRes.json();
+                    list = this.mergeExamples(list, exData.examples || null);
+                }
+            } catch (exError) {
+                console.warn(`Examples remote sync failed for grade ${gradeId}:`, exError);
+            }
+
+            const db = await getDB();
+            const tx = db.transaction('kanji', 'readwrite');
+            const store = tx.objectStore('kanji');
+
+            // Clear old entries for this grade before inserting new ones
+            const allReq = store.getAll();
+            await new Promise((resolve, reject) => {
+                allReq.onsuccess = () => {
+                    const oldEntries = allReq.result || [];
+                    for (const entry of oldEntries) {
+                        if (entry.kentei_grade === gradeId && entry.kanji !== '__word_relations__') {
+                            store.delete(entry.kanji);
+                        }
+                    }
+                    resolve();
+                };
+                allReq.onerror = () => reject(allReq.error);
+            });
+
+            for (const item of list) {
+                store.put(item);
+            }
+
+            await new Promise((resolve, reject) => {
+                tx.oncomplete = () => resolve();
+                tx.onerror = () => reject(tx.error);
+            });
+
+            // Also attempt to sync word relations
+            try {
+                const relRes = await fetch(`${REMOTE_URL_BASE}js/grades/word-relations.json?t=${Date.now()}`);
+                if (relRes.ok) {
+                    const data = await relRes.json();
+                    const tx2 = db.transaction('kanji', 'readwrite');
+                    tx2.objectStore('kanji').put({ kanji: '__word_relations__', data });
+                    await new Promise((resolve, reject) => {
+                        tx2.oncomplete = () => resolve();
+                        tx2.onerror = () => reject(tx2.error);
+                    });
+                }
+            } catch (relError) {
+                console.warn('Word relations remote sync failed, keeping local/cached version', relError);
+            }
+
             return true;
         } catch (e) {
-            return false;
+            console.warn(`Failed online sync, falling back to local files:`, e);
+            try {
+                await this.downloadGrade(gradeId);
+                return true;
+            } catch (localErr) {
+                console.error('Local fallback sync also failed:', localErr);
+                return false;
+            }
         }
     }
 };

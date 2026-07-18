@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>漢検マスター データ管理</title>
+    <link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="brand">
+                <h1>漢検マスター</h1>
+                <p>データ管理コンソール</p>
+            </div>
+            <nav class="nav-tabs" role="tablist" aria-label="メニュー">
+                <button class="nav-tab active" data-tab="kanji" role="tab" aria-selected="true" aria-controls="tab-kanji" id="nav-kanji">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    漢字データ
+                </button>
+                <button class="nav-tab" data-tab="antonyms" role="tab" aria-selected="false" aria-controls="tab-antonyms" id="nav-antonyms">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    対義語
+                </button>
+                <button class="nav-tab" data-tab="synonyms" role="tab" aria-selected="false" aria-controls="tab-synonyms" id="nav-synonyms">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+                    類義語
+                </button>
+                <button class="nav-tab" data-tab="same_kun" role="tab" aria-selected="false" aria-controls="tab-same_kun" id="nav-same_kun">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                    同訓異字
+                </button>
+                <button class="nav-tab" data-tab="homophones" role="tab" aria-selected="false" aria-controls="tab-homophones" id="nav-homophones">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+                    同音異字
+                </button>
+                <button class="nav-tab" data-tab="examples" role="tab" aria-selected="false" aria-controls="tab-examples" id="nav-examples">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                    例文一覧
+                </button>
+                <button class="nav-tab" data-tab="audit" role="tab" aria-selected="false" aria-controls="tab-audit" id="nav-audit">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    監査
+                </button>
+            </nav>
+            <div class="sidebar-footer">
+                ローカル専用 / ブラウザで http://localhost:3456
+            </div>
+        </aside>
+
+        <div class="content">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <span class="topbar-label">級:</span>
+                    <div id="grade-toggles" class="grade-toggles"></div>
+                    <button id="btn-select-all-grades" class="btn btn-sm btn-secondary">全選択</button>
+                    <button id="btn-deselect-all-grades" class="btn btn-sm btn-secondary">全解除</button>
+
+                    <!-- 例文タブ・監査タブ用フィルター（タブに応じて表示切り替え） -->
+                    <span id="examples-filter-section" class="topbar-filter-section" style="display:none;">
+                        <span class="topbar-sep">|</span>
+                        <span class="topbar-label">状態:</span>
+                        <div id="examples-filter-toggles" class="grade-toggles">
+                            <button type="button" class="grade-toggle active" data-filter="all">すべて</button>
+                            <button type="button" class="grade-toggle" data-filter="ok">正常</button>
+                            <button type="button" class="grade-toggle" data-filter="long">15字超</button>
+                            <button type="button" class="grade-toggle" data-filter="too_long">20字超</button>
+                            <button type="button" class="grade-toggle" data-filter="inappropriate">不適切</button>
+                            <button type="button" class="grade-toggle" data-filter="empty">例文なし</button>
+                        </div>
+                        <button id="btn-load-examples" class="btn btn-sm btn-secondary">再読み込み</button>
+                    </span>
+                </div>
+                <div class="topbar-search" id="topbar-search-wrap" role="search">
+                    <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" id="global-search" class="topbar-search-input" placeholder="漢字・読みで検索…" autocomplete="off" aria-label="テーブルを検索">
+                </div>
+                <div class="topbar-actions">
+                    <span id="dirty-badge" class="dirty-badge" style="display:none;" role="status" aria-live="polite">未保存の変更あり</span>
+                    <button id="btn-save" class="btn btn-primary" aria-label="現在のタブのデータを保存 (Ctrl+S)">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                        保存
+                    </button>
+                    <button id="btn-reload" class="btn btn-secondary" aria-label="データを再読み込み">再読み込み</button>
+                </div>
+            </header>
+
+            <main class="main">
+                <h2 id="page-title" class="main-title">漢字データ</h2>
+                <section id="tab-kanji" class="tab-panel active" role="tabpanel" aria-labelledby="nav-kanji">
+                    <div class="card">
+                        <div class="toolbar">
+                            <div class="toolbar-left">
+                                <span id="kanji-count" class="count" aria-live="polite"></span>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table id="kanji-table" class="data-table" aria-label="漢字データ一覧">
+                                <thead>
+                                    <tr>
+                                        <th data-sort="kanji" aria-sort="none" scope="col">漢字</th>
+                                        <th data-sort="on_readings" aria-sort="none" scope="col">音読み</th>
+                                        <th data-sort="kun_readings" aria-sort="none" scope="col">訓読み</th>
+                                        <th data-sort="meanings" aria-sort="none" scope="col">英語意味</th>
+                                        <th data-sort="meanings_ja" aria-sort="none" scope="col">日本語意味</th>
+                                        <th data-sort="examples" aria-sort="none" scope="col">例文数</th>
+                                        <th scope="col">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 対義語タブ -->
+                <section id="tab-antonyms" class="tab-panel" role="tabpanel" aria-labelledby="nav-antonyms">
+                    <div class="card">
+                        <div class="toolbar">
+                            <div class="toolbar-left">
+                                <span id="rel-antonyms-count" class="count" aria-live="polite"></span>
+                                <button type="button" class="btn btn-sm btn-primary" id="btn-add-antonym">＋ 追加</button>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table class="data-table" id="rel-antonyms-table" aria-label="対義語一覧">
+                                <thead><tr>
+                                    <th scope="col" data-sort="word">熟語</th>
+                                    <th scope="col" data-sort="antonym">対義語</th>
+                                    <th scope="col"><span class="sr-only">操作</span></th>
+                                </tr></thead>
+                                <tbody id="rel-antonyms-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 類義語タブ -->
+                <section id="tab-synonyms" class="tab-panel" role="tabpanel" aria-labelledby="nav-synonyms">
+                    <div class="card">
+                        <div class="toolbar">
+                            <div class="toolbar-left">
+                                <span id="rel-synonyms-count" class="count" aria-live="polite"></span>
+                                <button type="button" class="btn btn-sm btn-primary" id="btn-add-synonym">＋ 追加</button>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table class="data-table" id="rel-synonyms-table" aria-label="類義語一覧">
+                                <thead><tr>
+                                    <th scope="col" data-sort="word">熟語</th>
+                                    <th scope="col" data-sort="synonym">類義語</th>
+                                    <th scope="col"><span class="sr-only">操作</span></th>
+                                </tr></thead>
+                                <tbody id="rel-synonyms-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 同訓異字タブ -->
+                <section id="tab-same_kun" class="tab-panel" role="tabpanel" aria-labelledby="nav-same_kun">
+                    <div class="card">
+                        <div class="toolbar">
+                            <div class="toolbar-left">
+                                <span id="rel-same_kun-count" class="count" aria-live="polite"></span>
+                                <button type="button" class="btn btn-sm btn-primary" id="btn-add-same_kun">＋ 追加</button>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table class="data-table" id="rel-same_kun-table" aria-label="同訓異字一覧">
+                                <thead><tr>
+                                    <th scope="col" data-sort="reading">訓読み</th>
+                                    <th scope="col">漢字リスト（スペース区切り）</th>
+                                    <th scope="col"><span class="sr-only">操作</span></th>
+                                </tr></thead>
+                                <tbody id="rel-same_kun-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 同音異字タブ（読み取り専用） -->
+                <section id="tab-homophones" class="tab-panel" role="tabpanel" aria-labelledby="nav-homophones">
+                    <div class="card">
+                        <div class="toolbar">
+                            <div class="toolbar-left">
+                                <span id="rel-homophones-count" class="count" aria-live="polite"></span>
+                                <button type="button" class="btn btn-sm btn-primary" id="btn-add-homophone">＋ 追加</button>
+                            </div>
+                            <div class="toolbar-right">
+                                <span class="toolbar-note"><span class="homo-chip homo-chip--manual">手動</span> = 自動生成で上書きされません</span>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table class="data-table" id="rel-homophones-table" aria-label="同音異字一覧">
+                                <thead><tr>
+                                    <th scope="col" data-sort="kanji">基準漢字</th>
+                                    <th scope="col">同音漢字リスト（スペース区切り）</th>
+                                    <th scope="col"><span class="sr-only">操作</span></th>
+                                </tr></thead>
+                                <tbody id="rel-homophones-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="tab-examples" class="tab-panel" role="tabpanel" aria-labelledby="nav-examples">
+                    <div class="card">
+                        <div class="toolbar">
+                            <div class="toolbar-left">
+                                <span id="examples-count" class="count" aria-live="polite"></span>
+                                <button id="btn-undo-delete" class="btn btn-sm btn-secondary" style="display:none;" aria-label="直前の削除を元に戻す">
+                                    ↩ 削除を元に戻す
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table id="examples-table" class="data-table" aria-label="例文一覧">
+                                <thead>
+                                    <tr>
+                                        <th data-sort="grade" aria-sort="none" scope="col">級</th>
+                                        <th data-sort="kanji" aria-sort="none" scope="col">漢字</th>
+                                        <th data-sort="type" aria-sort="none" scope="col">状態</th>
+                                        <th scope="col">例文</th>
+                                        <th scope="col"><span class="sr-only">操作</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="tab-audit" class="tab-panel" role="tabpanel" aria-labelledby="nav-audit">
+                    <div class="card">
+                        <div class="toolbar">
+                            <div class="toolbar-left">
+                                <button id="btn-run-audit" class="btn btn-primary" aria-label="監査を実行">監査を実行</button>
+                                <span id="audit-count" class="count" aria-live="polite"></span>
+                            </div>
+                        </div>
+                        <div class="table-container">
+                            <table id="audit-table" class="data-table" aria-label="監査結果">
+                                <thead>
+                                    <tr>
+                                        <th data-sort="grade" aria-sort="none" scope="col">級</th>
+                                        <th data-sort="kanji" aria-sort="none" scope="col">漢字</th>
+                                        <th data-sort="word" aria-sort="none" scope="col">単語</th>
+                                        <th data-sort="len" aria-sort="none" scope="col">文字数</th>
+                                        <th data-sort="type" aria-sort="none" scope="col">種別</th>
+                                        <th scope="col">例文</th>
+                                        <th scope="col">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">漢字を編集</h2>
+                <button id="modal-close" class="btn btn-icon" aria-label="閉じる">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-grid">
+                    <div class="form-row">
+                        <label>漢字</label>
+                        <div id="detail-kanji" class="detail-value detail-kanji-large"></div>
+                    </div>
+                    <div class="form-row">
+                        <label>例文数</label>
+                        <div id="detail-examples-count" class="detail-value"></div>
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-row">
+                        <label>音読み</label>
+                        <div id="detail-on_readings" class="detail-value"></div>
+                    </div>
+                    <div class="form-row">
+                        <label>訓読み</label>
+                        <div id="detail-kun_readings" class="detail-value"></div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <label>英語意味</label>
+                    <div id="detail-meanings" class="detail-value"></div>
+                </div>
+                <div class="form-row">
+                    <label>日本語意味</label>
+                    <div id="detail-meanings_ja" class="detail-value"></div>
+                </div>
+                <div class="form-row">
+                    <label>例文 JSON</label>
+                    <pre id="detail-examples" class="detail-json"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+    <script src="/admin/admin-logic-browser.js"></script>
+    <script src="/admin/admin.js"></script>
+</body>
+</html>

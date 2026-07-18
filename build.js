@@ -16,6 +16,59 @@ const crypto = require('crypto');
 
 const ROOT = __dirname;
 
+// www/ ディレクトリにコピーするファイル・ディレクトリ
+const WWW_COPY_TARGETS = [
+    'index.html',
+    'css',
+    'js',
+    'kanjivg',
+    'manifest.json',
+    'sw.js',
+    'icons',
+    '.nojekyll'
+];
+
+// ディレクトリを再帰的にコピー
+function copyDirSync(src, dest) {
+    if (!fs.existsSync(dest)) {
+        fs.mkdirSync(dest, { recursive: true });
+    }
+    const entries = fs.readdirSync(src, { withFileTypes: true });
+    for (const entry of entries) {
+        const srcPath = path.join(src, entry.name);
+        const destPath = path.join(dest, entry.name);
+        if (entry.isDirectory()) {
+            copyDirSync(srcPath, destPath);
+        } else {
+            fs.copyFileSync(srcPath, destPath);
+        }
+    }
+}
+
+// www/ ディレクトリを構築
+function buildWww() {
+    const wwwDir = path.join(ROOT, 'www');
+    // クリーンアップ
+    if (fs.existsSync(wwwDir)) {
+        fs.rmSync(wwwDir, { recursive: true });
+    }
+    fs.mkdirSync(wwwDir, { recursive: true });
+
+    let copied = 0;
+    for (const target of WWW_COPY_TARGETS) {
+        const src = path.join(ROOT, target);
+        if (!fs.existsSync(src)) continue;
+        const dest = path.join(wwwDir, target);
+        if (fs.statSync(src).isDirectory()) {
+            copyDirSync(src, dest);
+        } else {
+            fs.copyFileSync(src, dest);
+        }
+        copied++;
+    }
+    console.log(`📦 www/ ディレクトリを構築しました (${copied} items)`);
+}
+
 // ハッシュ対象ファイル
 const HASH_TARGETS = [
     'index.html',
@@ -99,42 +152,85 @@ function updateSWCacheVersion(version) {
     fs.writeFileSync(filePath, content);
 }
 
+// android/app/build.gradle の versionCode と versionName を更新
+function updateAndroidGradleVersion(version) {
+    const filePath = path.join(ROOT, 'android/app/build.gradle');
+    if (!fs.existsSync(filePath)) return;
+
+    let content = fs.readFileSync(filePath, 'utf8');
+
+    // versionName "A.B.C" の更新
+    content = content.replace(
+        /versionName "[^"]+"/,
+        `versionName "${version}"`
+    );
+
+    // versionCode の計算 (A.B.C -> A * 10000 + B * 100 + C)
+    const parts = version.split('.');
+    const major = parseInt(parts[0], 10);
+    const minor = parseInt(parts[1], 10);
+    const patch = parseInt(parts[2] || '0', 10);
+    const versionCode = major * 10000 + minor * 100 + patch;
+
+    content = content.replace(
+        /versionCode \d+/,
+        `versionCode ${versionCode}`
+    );
+
+    fs.writeFileSync(filePath, content);
+}
+
+// package.json の version を更新
+function updatePackageVersion(version) {
+    const filePath = path.join(ROOT, 'package.json');
+    if (!fs.existsSync(filePath)) return;
+    const pkg = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    pkg.version = version;
+    fs.writeFileSync(filePath, JSON.stringify(pkg, null, 2) + '\n');
+}
+
 // メイン処理
 function main() {
-    const prevHash = fs.existsSync(HASH_STATE_FILE) 
-        ? fs.readFileSync(HASH_STATE_FILE, 'utf8').trim() 
+    const prevHash = fs.existsSync(HASH_STATE_FILE)
+        ? fs.readFileSync(HASH_STATE_FILE, 'utf8').trim()
         : '';
-    
+
     const currentHash = hashFiles(HASH_TARGETS);
     const currentVersion = getCurrentVersion();
 
     if (prevHash === currentHash) {
         console.log(`✅ 変更なし (v${currentVersion})`);
+        buildWww();
         return;
     }
 
     // 変更あり → バージョンを bump
     const newVersion = bumpVersion(currentVersion);
-    
+
     console.log(`📦 変更を検出しました`);
     console.log(`   ${currentVersion} → ${newVersion}`);
-    
+
     // 各ファイルを更新
     updateAppVersion(newVersion);
     updateManifestVersion(newVersion);
     updateSWCacheVersion(newVersion);
-    
+    updateAndroidGradleVersion(newVersion);
+    updatePackageVersion(newVersion);
+
     // ハッシュとバージョンを保存
     // 注意: ハッシュは更新後のファイル内容で再計算する（無限ループを防ぐため、
     // バージョン更新後のハッシュを保存）
     const newHash = hashFiles(HASH_TARGETS);
     fs.writeFileSync(HASH_STATE_FILE, newHash);
     fs.writeFileSync(VERSION_FILE, newVersion);
-    
+
     console.log(`✅ バージョン更新完了: v${newVersion}`);
     console.log(`   - js/app.js (APP_VERSION)`);
     console.log(`   - manifest.json (version)`);
     console.log(`   - sw.js (CACHE_NAME)`);
+    console.log(`   - android/app/build.gradle (versionCode, versionName)`);
+    console.log(`   - package.json (version)`);
+    buildWww();
 }
 
 main();
