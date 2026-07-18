@@ -282,7 +282,8 @@ export class QuizSession {
 
             if (ex.sentences && ex.sentences.length > 0) {
                 // 文章問題: 文章内の単語に下線を引いて読みを問う
-                const sentence = ex.sentences[Math.floor(Math.random() * ex.sentences.length)];
+                const sentObj = ex.sentences[Math.floor(Math.random() * ex.sentences.length)];
+                const sentence = (sentObj && typeof sentObj === 'object') ? sentObj.text : String(sentObj);
                 charEl.innerHTML = sentence.replace(ex.word, `<span class="furigana-target">${ex.word}</span>`);
                 charEl.style.fontSize = '1.4rem';
                 charEl.style.lineHeight = '1.8';
