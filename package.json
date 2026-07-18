@@ -1,6 +1,6 @@
 {
   "name": "kanken-master",
-  "version": "2.1.12",
+  "version": "2.1.15",
   "description": "漢検マスター - 手書き採点対応の漢字検定対策PWAアプリ",
   "private": true,
   "scripts": {
