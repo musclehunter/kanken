@@ -13,13 +13,13 @@
  *   grade-pre1.json  = 常用漢字 + 人名用漢字 + JIS第1・第2水準 (extra-jis.json)
  *                      → ~6,000字  [準1級・1級]
  *
- * Usage: node build-grades.js
+ * Usage: node scripts/build-grades.js
  */
 
 const fs = require('fs');
 const path = require('path');
 
-const GRADES_DIR = path.join(__dirname, 'js', 'grades');
+const GRADES_DIR = path.join(__dirname, '..', 'js', 'grades');
 
 function loadJSON(name) {
     return JSON.parse(fs.readFileSync(path.join(GRADES_DIR, name), 'utf8'));

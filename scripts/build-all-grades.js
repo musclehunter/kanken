@@ -9,7 +9,7 @@ const fs = require('fs');
 const path = require('path');
 
 const API_ROOT = 'https://kanjiapi.dev/v1/kanji/';
-const GRADES_DIR = path.join(__dirname, 'js', 'grades');
+const GRADES_DIR = path.join(__dirname, '..', 'js', 'grades');
 
 if (!fs.existsSync(GRADES_DIR)) {
     fs.mkdirSync(GRADES_DIR, { recursive: true });

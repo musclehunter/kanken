@@ -14,8 +14,8 @@
  *   → 単語: 二十歳(surface=２０歳), なる(surface=になりました)
  *
  * 使用法:
- *   node fetch-sentences.js                    # 全級の例文を取得
- *   node fetch-sentences.js --words=貧乏,花火   # 特定の単語のみ
+ *   node scripts/fetch-sentences.js                    # 全級の例文を取得
+ *   node scripts/fetch-sentences.js --words=貧乏,花火   # 特定の単語のみ
  */
 
 const https = require('https');
@@ -27,8 +27,8 @@ const URLS = {
   jpnIndices: 'https://downloads.tatoeba.org/exports/jpn_indices.csv',
 };
 
-const OUT = path.join(__dirname, 'js', 'grades');
-const CACHE_DIR = path.join(__dirname, '.cache');
+const OUT = path.join(__dirname, '..', 'js', 'grades');
+const CACHE_DIR = path.join(__dirname, '..', '.cache');
 
 const MAX_SENTENCES_PER_WORD = 5;
 const MAX_SENTENCE_LENGTH = 60;

@@ -9,7 +9,7 @@ const path = require('path');
 
 const GRADE1_API = 'https://kanjiapi.dev/v1/kanji/grade-1';
 const KANJI_DETAIL_PREFIX = 'https://kanjiapi.dev/v1/kanji/';
-const OUTPUT_FILE = path.join(__dirname, 'js', 'data.js');
+const OUTPUT_FILE = path.join(__dirname, '..', 'js', 'data.js');
 
 // Create js directory if it doesn't exist
 const jsDir = path.dirname(OUTPUT_FILE);
