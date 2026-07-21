@@ -6,13 +6,13 @@
  * ./kanjivg/<codepoint>.svg so the app works fully offline without any
  * external fetch at runtime.
  *
- * Usage: node build-kanjivg.js
+ * Usage: node scripts/build-kanjivg.js
  */
 
 const fs = require('fs');
 const path = require('path');
 
-const ROOT = __dirname;
+const ROOT = path.join(__dirname, '..');
 const OUT_DIR = path.join(ROOT, 'kanjivg');
 const SOURCES = [
     path.join(ROOT, 'js', 'data.js'),

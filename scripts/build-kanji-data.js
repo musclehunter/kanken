@@ -15,7 +15,7 @@ const SRC = {
   jmdict: 'http://ftp.edrdg.org/pub/Nihongo/JMdict_e.gz',
   kanjidic2: 'http://www.edrdg.org/kanjidic/kanjidic2.xml.gz'
 };
-const OUT = path.join(__dirname, 'js', 'grades');
+const OUT = path.join(__dirname, '..', 'js', 'grades');
 const GRADE_MAP = { '10級':10,'9級':9,'8級':8,'7級':7,'6級':6,'5級':5,'4級':4,'3級':3,'準2級':2.5,'2級':2,'準1級':1.5,'1級':1,'1/準1級':1.5 };
 const CONCURRENCY = 5;
 const DELAY_MS = 150;
